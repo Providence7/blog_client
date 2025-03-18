@@ -8,7 +8,7 @@ const PostListItem = ({ post }) => {
     <div className=" border border-gray-400 rounded-3xl p-3 flex flex-col xl:flex-row gap-8 mb-12">
       {/* image */}
       {post.img && (
-        <div className="md:hidden xl:block xl:w-1/3">
+        <div className=" xl:block xl:w-1/3">
           <Image src={post.img} className="rounded-2xl object-cover" w="735" />
         </div>
       )}
