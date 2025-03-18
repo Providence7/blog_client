@@ -17,7 +17,7 @@ const Homepage = () => {
       <div className="flex items-center justify-between">
         {/* titles */}
         <div className="">
-          <h1 className="text-[#912365] text-2xl md:text-4xl lg:text-5xl font-light">
+          <h1 className="hidden md:flex text-[#912365] text-2xl md:text-4xl lg:text-5xl font-light">
            An expression, an art, and a statement of individuality
 
           </h1>

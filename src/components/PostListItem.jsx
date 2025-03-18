@@ -20,9 +20,9 @@ const PostListItem = ({ post }) => {
         <div className="flex items-center gap-2 text-gray-400 text-sm">
           <span>Written by</span>
           <Link className="text-blue-800">CyberTailor</Link>
-          <span>on</span>
-          <Link className="text-blue-800">{post.category}</Link>
-          <span>{format(post.createdAt)}</span>
+          <span className="hidden md:flex">on</span>
+          <Link className="text-blue-800 hidden md:flex ">{post.category}</Link>
+          <span className="font-thin text-xs">{format(post.createdAt)}</span>
         </div>
         <p className="text-[#d12f90]">{post.desc}</p>
         <Link to={`/${post.slug}`} className="underline text-blue-800 font-bold text-sm">
