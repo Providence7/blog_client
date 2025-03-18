@@ -61,8 +61,8 @@ const router = createBrowserRouter([
      }
     ,
     {
-      path : "/habi",
-      element: <Habi />
+      path : "/about",
+      element: <About />
     }
     // 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
     ,
