@@ -42,12 +42,12 @@ const SinglePostPage = () => {
             <span>Written by</span>
             <Link className="text-blue-900">CyberTailor</Link>
   
-            <span>{format(data.createdAt)}</span>
+            <span className="text-sm font-bold">{format(data.createdAt)}</span>
           </div>
           <p className="text-gray-500 font-medium">{data.desc}</p>
         </div>
         {data.img && (
-          <div className=" lg:block w-2/5">
+          <div className="hidden lg:block w-2/5">
             <Image src={data.img} w="600" className="rounded-2xl" />
           </div>
         )}
