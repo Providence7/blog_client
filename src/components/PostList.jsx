@@ -11,8 +11,12 @@ const fetchPosts = async (pageParam, searchParams) => {
 
   const res = await axios.get(`${import.meta.env.VITE_API_URL}/posts`, {
     params: { page: pageParam, limit: 10, ...searchParamsObj },
+    
   });
+  console.log("API URL:", import.meta.env.VITE_API_URL);
+
   return res.data;
+  
 };
 
 const PostList = () => {
