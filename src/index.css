@@ -1,0 +1,51 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+
+
+body{
+  background-color: #e1e1e1;
+  width: 100vw;
+  overflow-x: hidden;
+  font-family: "Montserrat", sans-serif;
+}
+.animatedButton{
+  animation-duration: 10000ms;
+}
+
+.ql-container{
+  border: none !important;
+}
+.ql-toolbar{
+  border: none !important;
+}
+.ql-editor{
+  border: none !important;
+}
+.custom-quill .ql-editor {
+  min-height: 300px;
+  line-height: 2 !important; /* 🔥 Ensures proper line spacing */
+  padding: 15px;
+  font-size: 16px;
+}
+
+.custom-quill .ql-editor p {
+  margin-bottom: 15px !important; /* 🔥 Forces paragraph spacing */
+}
+
+.custom-quill .ql-editor ul,
+.custom-quill .ql-editor ol {
+  padding-left: 30px !important; /* 🔥 Proper bullet indentation */
+}
+
+.custom-quill .ql-editor li {
+  margin-bottom: 10px !important; /* 🔥 Adds space between bullet points */
+}
+
+.custom-quill .ql-editor br {
+  display: block;
+  content: "";
+  margin-bottom: 15px; /* 🔥 Forces visible new lines */
+}
