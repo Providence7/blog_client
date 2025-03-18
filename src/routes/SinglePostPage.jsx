@@ -47,7 +47,7 @@ const SinglePostPage = () => {
           <p className="text-gray-500 font-medium">{data.desc}</p>
         </div>
         {data.img && (
-          <div className="flex lg:block w-2/5">
+          <div className=" lg:block w-2/5">
             <Image src={data.img} w="600" className="rounded-2xl" />
           </div>
         )}
