@@ -25,7 +25,7 @@ const SideMenu = () => {
   return (
     <div className="px-4 mb-20 top-8">
     
-      <div className="flex flex-col gap-2 text-sm">
+      {/* <div className="flex flex-col gap-2 text-sm">
         <label htmlFor="" className="flex items-center gap-2 cursor-pointer">
           <input
             type="radio"
@@ -66,7 +66,7 @@ const SideMenu = () => {
           />
           Oldest
         </label>
-      </div>
+      </div> */}
       <h1 className="mt-8 mb-4 text-sm font-medium">Categories</h1>
       <div className="flex flex-col gap-2 text-sm">
         <span className="underline cursor-pointer" onClick={()=>handleCategoryChange("general")}>All</span>
