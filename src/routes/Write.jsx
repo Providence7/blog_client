@@ -36,7 +36,7 @@ const Write = () => {
 
   const mutation = useMutation({
     mutationFn: async (newPost) => {
-      return axios.post("http://localhost:3000/posts", newPost, {
+      return axios.post("https://fashionblog.onrender.com/posts", newPost, {
         headers: { "Content-Type": "application/json" },
       });
     },

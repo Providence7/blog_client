@@ -5,7 +5,7 @@ import { toast } from "react-toastify";
 const authenticator = async () => {
   try {
     const response = await fetch(
-      `${import.meta.env.VITE_API_URL}/posts/upload-auth`
+      `https://fashionblog.onrender.com/posts/upload-auth`
     );
 
     if (!response.ok) {

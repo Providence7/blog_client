@@ -9,7 +9,7 @@ const fetchPosts = async (pageParam, searchParams) => {
 
   console.log(searchParamsObj);
 
-  const res = await axios.get(`${import.meta.env.VITE_API_URL}/posts`, {
+  const res = await axios.get(`https://fashionblog.onrender.com/posts`, {
     params: { page: pageParam, limit: 10, ...searchParamsObj },
     
   });
