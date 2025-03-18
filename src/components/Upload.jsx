@@ -7,7 +7,7 @@ const authenticator = async () => {
     const response = await fetch(
       `https://fashionblog.onrender.com/posts/upload-auth`
     );
-
+// ori mi lo ma
     if (!response.ok) {
       const errorText = await response.text();
       throw new Error(
