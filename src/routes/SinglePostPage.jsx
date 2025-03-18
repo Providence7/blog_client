@@ -37,11 +37,15 @@ const SinglePostPage = () => {
           <h1 className="text-xl md:text-3xl xl:text-4xl 2xl:text-5xl font-semibold">
             {data.title}
           </h1>
+          {post.img && (
+        <div className="md:hidden xl:block xl:w-1/3">
+          <Image src={data.img} className="rounded-2xl object-cover" w="735" />
+        </div>
+      )}
           <div className="flex items-center gap-2 text-gray-400 text-sm">
             <span>Written by</span>
             <Link className="text-blue-900">CyberTailor</Link>
-            <span>on</span>
-            <Link className="text-blue-800">{data.category}</Link>
+  
             <span>{format(data.createdAt)}</span>
           </div>
           <p className="text-gray-500 font-medium">{data.desc}</p>
