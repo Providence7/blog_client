@@ -22,7 +22,7 @@ const PostListItem = ({ post }) => {
           <Link className="text-blue-800">CyberTailor</Link>
           <span className="hidden md:flex">on</span>
           <Link className="text-blue-800 hidden md:flex ">{post.category}</Link>
-          <span className="font-thin text-xs">{format(post.createdAt)}</span>
+          <span className="font-normal text-xs">{format(post.createdAt)}</span>
         </div>
         <p className="text-[#d12f90]">{post.desc}</p>
         <Link to={`/${post.slug}`} className="underline text-blue-800 font-bold text-sm">
