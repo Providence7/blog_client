@@ -71,10 +71,10 @@ const SideMenu = () => {
       <div className="flex flex-col gap-2 text-sm">
         <span className="underline cursor-pointer" onClick={()=>handleCategoryChange("general")}>All</span>
         <span className="underline cursor-pointer" onClick={()=>handleCategoryChange("technology")}>Technology</span>
-        <span className="underline cursor-pointer" onClick={()=>handleCategoryChange("spotlight")}>Spotlight</span>
-        <span className="underline cursor-pointer" onClick={()=>handleCategoryChange("tailoring")}>Tailoring</span>
-        <span className="underline cursor-pointer" onClick={()=>handleCategoryChange("treads")}>Treads</span>
-        <span className="underline cursor-pointer" onClick={()=>handleCategoryChange("stories")}>Stories</span>
+        <span className="underline cursor-pointer" onClick={()=>handleCategoryChange("spot")}>Spotlight</span>
+        <span className="underline cursor-pointer" onClick={()=>handleCategoryChange("tailor")}>Tailoring</span>
+        <span className="underline cursor-pointer" onClick={()=>handleCategoryChange("tread")}>Treads</span>
+        <span className="underline cursor-pointer" onClick={()=>handleCategoryChange("story")}>Stories</span>
       </div>
     </div>
   );

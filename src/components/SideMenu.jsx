@@ -72,11 +72,11 @@ const SideMenu = () => {
       <h1 className="mt-8 mb-4 text-sm font-medium">Categories</h1>
       <div className="flex flex-col gap-2 text-sm">
         <span className="underline cursor-pointer" onClick={()=>handleCategoryChange("general")}>All</span>
-        <span className="underline cursor-pointer" onClick={()=>handleCategoryChange("web-design")}>Technology</span>
-        <span className="underline cursor-pointer" onClick={()=>handleCategoryChange("development")}>Spotlight</span>
-        <span className="underline cursor-pointer" onClick={()=>handleCategoryChange("databases")}>Tailoring</span>
-        <span className="underline cursor-pointer" onClick={()=>handleCategoryChange("seo")}>Treads</span>
-        <span className="underline cursor-pointer" onClick={()=>handleCategoryChange("marketing")}>Stories</span>
+        <span className="underline cursor-pointer" onClick={()=>handleCategoryChange("technology")}>Technology</span>
+        <span className="underline cursor-pointer" onClick={()=>handleCategoryChange("spot")}>Spotlight</span>
+        <span className="underline cursor-pointer" onClick={()=>handleCategoryChange("tailor")}>Tailoring</span>
+        <span className="underline cursor-pointer" onClick={()=>handleCategoryChange("tread")}>Treads</span>
+        <span className="underline cursor-pointer" onClick={()=>handleCategoryChange("story")}>Stories</span>
       </div>
     </div>
   );
