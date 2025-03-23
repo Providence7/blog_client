@@ -6,7 +6,7 @@ import { format } from "timeago.js";
 
 const fetchPost = async () => {
   const res = await axios.get(
-    'https://fashionblog.onrender.com/posts?featured=true&limit=1&sort=newest'
+    'import.meta.env.VITE_API_URL/posts?featured=true&limit=1&sort=newest'
   );
   return res.data;
 };
