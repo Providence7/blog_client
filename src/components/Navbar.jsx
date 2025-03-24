@@ -12,7 +12,7 @@ const Navbar = () => {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const res = await fetch("http://localhost:3000/auth/profile", {
+        const res = await fetch("${import.meta.env.VITE_API_URL}/auth/profile", {
           method: "GET",
           credentials: "include", // Ensure session cookies are sent
         });
@@ -28,7 +28,7 @@ const Navbar = () => {
   }, []);
 
   const handleLogout = async () => {
-    await axios.get("http://localhost:3000/auth/logout", {
+    await axios.get("${import.meta.env.VITE_API_URL}/auth/logout", {
       withCredentials: true,
     });
     setUser(null);

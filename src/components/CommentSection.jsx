@@ -9,7 +9,7 @@ const CommentSection = ({ postId, user }) => {
   useEffect(() => {
     const fetchComments = async () => {
       try {
-        const res = await fetch(`http://localhost:3000/comments/${postId}`);
+        const res = await fetch(`${import.meta.env.VITE_API_URL}/comments/${postId}`);
         if (!res.ok) throw new Error("Failed to fetch comments");
         const data = await res.json();
         setComments(data);
@@ -32,7 +32,7 @@ const CommentSection = ({ postId, user }) => {
     if (!newComment.trim() || !user) return;
     setLoading(true);
     try {
-      const res = await fetch(`http://localhost:3000/comments/${postId}`, {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/comments/${postId}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
@@ -53,7 +53,7 @@ const CommentSection = ({ postId, user }) => {
   // Handle comment deletion
   const handleDelete = async (commentId) => {
     try {
-      await fetch(`http://localhost:3000/comments/${commentId}`, {
+      await fetch(`${import.meta.env.VITE_API_URL}/comments/${commentId}`, {
         method: "DELETE",
         credentials: "include",
       });

@@ -9,7 +9,7 @@ import { format } from "timeago.js";
 import { Twitter, Facebook, Instagram} from "lucide-react";
 
 const fetchPost = async (slug) => {
-  const res = await axios.get(` http://localhost:3000/posts/${slug}`);
+  const res = await axios.get(`${import.meta.env.VITE_API_URL}/posts/${slug}`);
   return res.data;
 };
 const stripHtml = (html) => {

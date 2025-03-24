@@ -9,7 +9,7 @@ const Login = () => {
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        const res = await axios.get("http://localhost:3000/auth/profile", {
+        const res = await axios.get(`${import.meta.env.VITE_API_URL}/auth/profile `, {
           withCredentials: true,
         });
         if (res.data) {
@@ -23,7 +23,7 @@ const Login = () => {
   }, [navigate]);
 
   const handleGoogleLogin = () => {
-    window.location.href = "http://localhost:3000/auth/google"; // Redirect to backend
+    window.location.href = '${import.meta.env.VITE_API_URL}/auth/google'; // Redirect to backend
   };
 
   return (

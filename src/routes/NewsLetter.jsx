@@ -13,7 +13,7 @@ const Newsletter = () => {
     }
 
     try {
-      const res = await axios.post(" http://localhost:3000/newsletter/subscribe", { email });
+      const res = await axios.post("${import.meta.env.VITE_API_URL}/newsletter/subscribe", { email });
       setMessage("✅ " + res.data.message);
       setEmail("");
     } catch (error) {
