@@ -2,14 +2,14 @@ import { Link, useParams } from "react-router-dom";
 import Image from "../components/Image";
 //import PostMenuActions from "../components/PostMenuActions";
 import Search from "../components/Search";
-// import Comments from "../components/Comments";
+import Comments from "../components/CommentSection";
 import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
 import { format } from "timeago.js";
 import { Twitter, Facebook, Instagram} from "lucide-react";
 
 const fetchPost = async (slug) => {
-  const res = await axios.get(`import.meta.env.VITE_API_URL/posts/${slug}`);
+  const res = await axios.get(` http://localhost:3000/posts/${slug}`);
   return res.data;
 };
 const stripHtml = (html) => {
@@ -96,7 +96,7 @@ const SinglePostPage = () => {
         
         </div>
       </div>
-      {/* <Comments postId={data._id}/> */}
+      <Comments />
     </div>
   );
 };

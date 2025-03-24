@@ -8,7 +8,7 @@ const fetchPost = async () => {
   const res = await axios.get(
     'import.meta.env.VITE_API_URL/posts?featured=true&limit=1&sort=newest'
   );
-  return res.data;
+  return res.data;2
 };
 
 const FeaturedPosts = () => {

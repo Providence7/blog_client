@@ -9,7 +9,7 @@ const fetchPosts = async (pageParam, searchParams) => {
 
   console.log(searchParamsObj);
 
-  const res = await axios.get(`https://fashionblog.onrender.com/posts`, {
+  const res = await axios.get(` http://localhost:3000/posts`, {
     params: { page: pageParam, limit: 10, ...searchParamsObj },
     
   });
