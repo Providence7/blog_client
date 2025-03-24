@@ -9,23 +9,26 @@ const Navbar = () => {
   const [user, setUser] = useState(null);
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
-  useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        const res = await fetch(`${import.meta.env.VITE_API_URL}/auth/profile`, {
-          method: "GET",
-          credentials: "include", // Ensure session cookies are sent
-        });
-        if (!res.ok) throw new Error("Unauthorized");
-        const data = await res.json();
-        console.log("Fetched User:", data);
-        setUser(data);
-      } catch (err) {
-        console.error("Error fetching user:", err);
+  const fetchProfile = async () => {
+    try {
+      const res = await axios.get(`${import.meta.env.VITE_API_URL}/auth/profile`, {
+        withCredentials: true, // ✅ Sends cookies
+      });
+  
+      console.log("User profile:", res.data);
+    } catch (error) {
+      if (error.response?.status === 403) {
+        console.log("User is not logged in. Skipping profile fetch.");
+        return;
       }
-    };
-    fetchUser();
+      console.error("Error fetching user:", error);
+    }
+  };
+  
+  useEffect(() => {
+    fetchProfile();
   }, []);
+  
 
   const handleLogout = async () => {
     await axios.get(`${import.meta.env.VITE_API_URL}/auth/logout`, {
