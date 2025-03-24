@@ -36,7 +36,7 @@ const Write = () => {
 
   const mutation = useMutation({
     mutationFn: async (newPost) => {
-      return axios.post("`${import.meta.env.VITE_API_URL}/posts", newPost, {
+      return axios.post(`${import.meta.env.VITE_API_URL}/posts`, newPost, {
         headers: { "Content-Type": "application/json" },
       });
     },

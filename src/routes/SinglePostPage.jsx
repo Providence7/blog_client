@@ -39,7 +39,7 @@ const SinglePostPage = () => {
           </h1>
          
           <div className="flex items-center gap-2 text-gray-400 text-sm">
-            <span>Written by</span>
+            <span>by</span>
             <Link className="text-blue-900">CyberTailor</Link>
   
             <span className="text-sm font-bold">{format(data.createdAt)}</span>

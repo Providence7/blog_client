@@ -23,7 +23,8 @@ const Login = () => {
   }, [navigate]);
 
   const handleGoogleLogin = () => {
-    window.location.href = '${import.meta.env.VITE_API_URL}/auth/google'; // Redirect to backend
+    window.location.href =fetch(`${import.meta.env.VITE_API_URL}/auth/google`)
+    ; // Redirect to backend
   };
 
   return (
