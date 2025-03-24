@@ -9,14 +9,16 @@ const Login = () => {
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        const res = await axios.get(`${import.meta.env.VITE_API_URL}/auth/profile `, {
-          withCredentials: true,
+        const res = await fetch(`${import.meta.env.VITE_API_URL}/auth/profile`, {
+          method: "GET",
+          credentials: "include", // Ensure cookies are sent
         });
-        if (res.data) {
-          navigate("/"); // Redirect if already logged in
-        }
+        if (!res.ok) throw new Error("Unauthorized");
+        const data = await res.json();
+        console.log("User Data:", data);
+        setUser(data);
       } catch (err) {
-        console.log("Not authenticated");
+        console.error("Error fetching user:", err);
       }
     };
     checkAuth();
