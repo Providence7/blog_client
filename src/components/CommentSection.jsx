@@ -21,9 +21,10 @@ const CommentSection = ({ slug }) => {
     const provider = new GoogleAuthProvider();
 
     try {
-      const result = await signInWithPopup(auth, provider);
+      const result = await signInWithRedirect(auth, provider);
       const user = result.user;
 
+      
       const userData = {
         googleId: user.uid,
         email: user.email,
