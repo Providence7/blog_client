@@ -142,12 +142,12 @@ const CommentSection = ({ slug }) => {
         </button>
       )}
 
-      <div className="mt-6 px-5 space-y-6">
+      <div className="mt-6 w-fit space-y-6">
         {comments.length > 0 ? (
           comments.map((c, index) => (
             <div
               key={c._id || `${c.googleId}-${c.postId}`}
-              className={`p-4 rounded-lg shadow-md ${
+              className={`rounded-lg shadow-md ${
                 index % 2 === 0 ? "bg-gray-100" : "bg-gray-50"
               }`}
             >
