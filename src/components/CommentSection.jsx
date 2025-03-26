@@ -137,7 +137,7 @@ const CommentSection = ({ slug }) => {
         </button>
       )}
 
-      <div className="mt-6 space-y-4">
+      <div className="mt-6 px-5 space-y-6">
         {comments.length > 0 ? (
           comments.map((c, index) => (
             <div
@@ -146,7 +146,10 @@ const CommentSection = ({ slug }) => {
                 index % 2 === 0 ? "bg-gray-100" : "bg-gray-50"
               }`}
             >
-             <p className="font-semibold text-[#c4458f]">{c.username || c.name}</p>
+          
+            <p className="font-bold italic text-[#c4458f]">{(c.username || c.name)?.toUpperCase()}
+            </p>
+        
              <p className="text-[#46249c]">
   {c.comment.charAt(0).toUpperCase() + c.comment.slice(1)}
 </p>
