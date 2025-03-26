@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { auth } from "../layout/console.js";
-import { GoogleAuthProvider, signInWithRedirect, onAuthStateChanged, signOut } from "firebase/auth";
-import Image from "./Image.jsx";
+import { GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut } from "firebase/auth";
 
 const CommentSection = ({ slug }) => {
   const [user, setUser] = useState(null);
@@ -22,15 +21,13 @@ const CommentSection = ({ slug }) => {
     const provider = new GoogleAuthProvider();
 
     try {
-      const result = await signInWithRedirect(auth, provider);
+      const result = await signInWithPopup(auth, provider);
       const user = result.user;
 
-      
       const userData = {
         googleId: user.uid,
         email: user.email,
         username: user.displayName,
-        photoURL: user.photoURL
       };
 
       const res = await fetch(`${import.meta.env.VITE_API_URL}/api/auth/google-login`, {
@@ -79,7 +76,6 @@ const CommentSection = ({ slug }) => {
       name: user.displayName,
       email: user.email,
       comment: comment,
-      photoURL: user.photoURL,
     };
 
     try {
@@ -150,11 +146,6 @@ const CommentSection = ({ slug }) => {
                 index % 2 === 0 ? "bg-gray-100" : "bg-gray-50"
               }`}
             >
-                <Image
-        src='blog1.png' // ✅ Use Google profile picture, fallback to default
-        alt="User Avatar"
-        className="w-10 h-10 rounded-full"
-      />
              <p className="font-semibold text-[#c4458f]">{c.username || c.name}</p>
              <p className="text-[#46249c]">
   {c.comment.charAt(0).toUpperCase() + c.comment.slice(1)}
