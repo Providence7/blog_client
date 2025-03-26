@@ -1,6 +1,5 @@
 import { Link } from "react-router-dom";
 import MainCategories from "../components/MainCatergories";
-import FeaturedPosts from "../components/FeaturedPost";
 import PostList from "../components/PostList";
 import Search from "../components/Search";
 

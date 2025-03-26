@@ -4,17 +4,16 @@ import axios from "axios";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { useSearchParams } from "react-router-dom";
 
-const fetchPosts = async ({ pageParam, searchParams }) => {
+const fetchPosts = async (pageParam, searchParams) => {
   const searchParamsObj = Object.fromEntries([...searchParams]);
-  
-  console.log("Fetching page:", pageParam);
+
   console.log("Search Params:", searchParamsObj);
+  console.log("Fetching page:", pageParam); // 🔍 Debugging
 
   const res = await axios.get(`${import.meta.env.VITE_API_URL}/posts`, {
     params: { page: pageParam, limit: 10, ...searchParamsObj },
   });
 
-  console.log("API Response:", res.data);
   return res.data;
 };
 
@@ -27,14 +26,15 @@ const PostList = () => {
     fetchNextPage,
     hasNextPage,
     isFetching,
+    isFetchingNextPage,
+    status,
   } = useInfiniteQuery({
     queryKey: ["posts", searchParams.toString()],
-    queryFn: ({ pageParam = 1 }) => fetchPosts({ pageParam, searchParams }),
+    queryFn: async ({ pageParam = 1 }) => await fetchPosts(pageParam, searchParams), // ✅ Await the function
     initialPageParam: 1,
     getNextPageParam: (lastPage, pages) =>
       lastPage.hasMore ? pages.length + 1 : undefined,
   });
-
   if (isFetching) return <p>Loading...</p>;
   if (error) return <p>Something went wrong!</p>;
 

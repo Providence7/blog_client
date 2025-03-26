@@ -1,114 +1,159 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
+import { auth } from "../layout/console.js";
+import { GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut } from "firebase/auth";
 
-const CommentSection = ({ postId, user }) => {
+const CommentSection = ({ slug }) => {
+  const [user, setUser] = useState(null);
+  const [comment, setComment] = useState("");
   const [comments, setComments] = useState([]);
-  const [newComment, setNewComment] = useState("");
-  const [loading, setLoading] = useState(false);
 
-  // Fetch comments for this post
+  // Check if user is logged in
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      setUser(currentUser);
+    });
+
+    return () => unsubscribe(); // Cleanup subscription
+  }, []);
+
+  // Handle Google Sign-in
+  const handleGoogleLogin = async () => {
+    const provider = new GoogleAuthProvider();
+
+    try {
+      const result = await signInWithPopup(auth, provider);
+      const user = result.user;
+
+      const userData = {
+        googleId: user.uid,
+        email: user.email,
+        username: user.displayName,
+      };
+
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/auth/google-login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(userData),
+      });
+
+      const data = await res.json();
+      setUser(data.user);
+    } catch (error) {
+      console.error("Google login error:", error);
+    }
+  };
+
+  // Handle Logout
+  const handleLogout = async () => {
+    await signOut(auth);
+    setUser(null);
+  };
+
+  // Fetch Comments for the Post (by Slug)
   useEffect(() => {
     const fetchComments = async () => {
       try {
-        const res = await fetch(`${import.meta.env.VITE_API_URL}/comments/${postId}`);
-        if (!res.ok) throw new Error("Failed to fetch comments");
+        const res = await fetch(`${import.meta.env.VITE_API_URL}/api/comments/${slug}`);
         const data = await res.json();
         setComments(data);
-      } catch (err) {
-        console.error("Error fetching comments:", err);
+      } catch (error) {
+        console.error("Error fetching comments:", error);
       }
     };
-    fetchComments();
-    console.log("CommentSection mounted, postId:", postId);
-    if (!postId) {
-      console.error("postId is undefined, cannot fetch comments.");
-      return;
-    }
-    fetchComments();
-  }, [postId]);
 
-  // Handle new comment submission
+    fetchComments();
+  }, [slug]);
+
+  // Submit Comment
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!newComment.trim() || !user) return;
-    setLoading(true);
+
+    if (!comment.trim()) return; // Prevent empty comments
+
+    const commentData = {
+      postId: slug,
+      googleId: user.uid,
+      name: user.displayName,
+      email: user.email,
+      comment: comment,
+    };
+
     try {
-      const res = await fetch(`${import.meta.env.VITE_API_URL}/comments/${postId}`, {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/comments`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        credentials: "include",
-        body: JSON.stringify({ text: newComment, userId: user?._id }),
+        body: JSON.stringify(commentData),
       });
-      if (!res.ok) throw new Error("Failed to post comment");
-      const data = await res.json();
-      setComments([data, ...comments]);
-      setNewComment("");
-      console.log("User prop:", user);
 
-    } catch (err) {
-      console.error("Error posting comment:", err);
-    }
-    setLoading(false);
-  };
+      if (!res.ok) {
+        throw new Error("Error submitting comment");
+      }
 
-  // Handle comment deletion
-  const handleDelete = async (commentId) => {
-    try {
-      await fetch(`${import.meta.env.VITE_API_URL}/comments/${commentId}`, {
-        method: "DELETE",
-        credentials: "include",
-      });
-      setComments(comments.filter((comment) => comment._id !== commentId));
-    } catch (err) {
-      console.error("Failed to delete comment", err);
+      const newComment = await res.json();
+
+      // ✅ Fetch updated comments without reloading the page
+      setComments((prev) => [newComment.newComment, ...prev]);
+
+      setComment(""); // Clear input field
+    } catch (error) {
+      console.error(error.message);
     }
   };
 
   return (
-    <div className="w-full p-4 border rounded-lg shadow">
-      <h3 className="text-lg font-semibold mb-3">Comments</h3>
-      {/* Comment Input (Accessible to everyone but requires login to submit) */}
-      {user !== null && (
-  <form onSubmit={handleSubmit} className="mb-4">
-    <textarea
-      className="w-full p-2 border rounded-md"
-      placeholder="Write a comment..."
-      value={newComment}
-      onChange={(e) => setNewComment(e.target.value)}
-      disabled={!user}
-    />
-    <button
-      type="submit"
-      className="mt-2 px-4 py-2 bg-blue-500 text-white rounded-md"
-      disabled={!user || loading}
-    >
-      {loading ? "Posting..." : "Post Comment"}
-    </button>
-  </form>
-)}
+    <div className="max-w-2xl mx-auto p-6 bg-white shadow-md rounded-lg">
+      {user ? (
+        <>
+          <div className="flex justify-between items-center mb-4">
+            <p className="text-lg font-semibold text-[#46249c]">
+              Welcome, {user.displayName}!
+            </p>
+            <button
+              onClick={handleLogout}
+              className="bg-[#c4458f] text-white px-4 py-2 rounded-md hover:bg-[#a43272] transition"
+            >
+              Logout
+            </button>
+          </div>
+          <textarea
+            value={comment}
+            onChange={(e) => setComment(e.target.value)}
+            placeholder="Write your comment..."
+            className="w-full border border-gray-300 rounded-lg p-3 mb-3 shadow-sm focus:outline-none focus:ring-2 focus:ring-[#46249c]"
+          />
+          <button
+            onClick={handleSubmit}
+            className="w-full bg-[#46249c] text-white py-2 rounded-lg hover:bg-[#351a76] transition"
+          >
+            Submit Comment
+          </button>
+        </>
+      ) : (
+        <button
+          onClick={handleGoogleLogin}
+          className="w-full bg-[#c4458f] text-white py-2 rounded-lg hover:bg-[#a43272] transition"
+        >
+          Login with Google to comment
+        </button>
+      )}
 
-
-
-      {/* Display Comments */}
-      <div className="space-y-4">
-        {comments.length === 0 ? (
-          <p className="text-gray-500">No comments yet.</p>
-        ) : (
-          comments.map((comment) => (
-            <div key={comment._id} className="p-3 border rounded-md flex justify-between">
-              <div>
-                <p className="font-semibold">{comment?.user?.username || "Anonymous"}</p>
-                <p>{comment.text}</p>
-              </div>
-              {user && user._id === comment.user._id && (
-                <button
-                  onClick={() => handleDelete(comment._id)}
-                  className="text-red-500 text-sm"
-                >
-                  Delete
-                </button>
-              )}
+      <div className="mt-6 space-y-4">
+        {comments.length > 0 ? (
+          comments.map((c, index) => (
+            <div
+              key={c._id || `${c.googleId}-${c.postId}`}
+              className={`p-4 rounded-lg shadow-md ${
+                index % 2 === 0 ? "bg-gray-100" : "bg-gray-50"
+              }`}
+            >
+             <p className="font-semibold text-[#c4458f]">{c.username || c.name}</p>
+             <p className="text-[#46249c]">
+  {c.comment.charAt(0).toUpperCase() + c.comment.slice(1)}
+</p>
             </div>
           ))
+        ) : (
+          <p className="text-gray-500 text-center mt-4">No comments yet.</p>
         )}
       </div>
     </div>

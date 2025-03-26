@@ -7,8 +7,6 @@ import PostListPage from "../src/routes/PostListPage.jsx"
 import SinglePost from "../src/routes/SinglePostPage.jsx"
 import About from "../src/routes/About.jsx"
 import Write from "../src/routes/Write.jsx"
-import Login from "../src/routes/Login.jsx"
-import Register from "../src/routes/Register.jsx"
 import Homepage from "../src/routes/Homepage.jsx"
 import Mainlayout from './layout/Mainlayout.jsx'
 // import  {ClerkProvider}  from "@clerk/clerk-react"
@@ -40,16 +38,7 @@ const router = createBrowserRouter([
       path : "/about",
       element: <About />
     }
-    ,
-    {
-      path : "/login",
-      element: <Login />
-    }
-    ,
-    {
-      path : "/register",
-      element: <Register />
-    }
+  
     ,
     {
       path : "/posts",
