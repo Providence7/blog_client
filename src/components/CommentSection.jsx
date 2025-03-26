@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { auth } from "../layout/console.js";
-import { GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut } from "firebase/auth";
+import { GoogleAuthProvider, signInWithRedirect, onAuthStateChanged, signOut } from "firebase/auth";
 
 const CommentSection = ({ slug }) => {
   const [user, setUser] = useState(null);
@@ -29,6 +29,7 @@ const CommentSection = ({ slug }) => {
         googleId: user.uid,
         email: user.email,
         username: user.displayName,
+        photoURL: user.photoURL
       };
 
       const res = await fetch(`${import.meta.env.VITE_API_URL}/api/auth/google-login`, {
