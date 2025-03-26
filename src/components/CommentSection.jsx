@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { auth } from "../layout/console.js";
 import { GoogleAuthProvider, signInWithRedirect, onAuthStateChanged, signOut } from "firebase/auth";
-import Image from "./Image.jsx"
 
 const CommentSection = ({ slug }) => {
   const [user, setUser] = useState(null);
@@ -150,8 +149,8 @@ const CommentSection = ({ slug }) => {
                 index % 2 === 0 ? "bg-gray-100" : "bg-gray-50"
               }`}
             >
-                <Image 
-        src={blog1.png } // ✅ Use Google profile picture, fallback to default
+                <img 
+        src={c.photoURL} // ✅ Use Google profile picture, fallback to default
         alt="User Avatar"
         className="w-10 h-10 rounded-full"
       />
