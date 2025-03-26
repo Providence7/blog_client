@@ -77,6 +77,7 @@ const CommentSection = ({ slug }) => {
       name: user.displayName,
       email: user.email,
       comment: comment,
+      photoURL: user.photoURL,
     };
 
     try {
@@ -147,6 +148,11 @@ const CommentSection = ({ slug }) => {
                 index % 2 === 0 ? "bg-gray-100" : "bg-gray-50"
               }`}
             >
+                <img 
+        src={c.photoURL || "/default-avatar.png"} // ✅ Use Google profile picture, fallback to default
+        alt="User Avatar"
+        className="w-10 h-10 rounded-full"
+      />
              <p className="font-semibold text-[#c4458f]">{c.username || c.name}</p>
              <p className="text-[#46249c]">
   {c.comment.charAt(0).toUpperCase() + c.comment.slice(1)}
