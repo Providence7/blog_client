@@ -151,7 +151,7 @@ const CommentSection = ({ slug }) => {
               }`}
             >
                 <Image 
-        src={c.photoURL || blog1.png } // ✅ Use Google profile picture, fallback to default
+        src={blog1.png } // ✅ Use Google profile picture, fallback to default
         alt="User Avatar"
         className="w-10 h-10 rounded-full"
       />
