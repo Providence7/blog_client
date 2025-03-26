@@ -73,7 +73,7 @@ const SinglePostPage = () => {
             </div>
 
             <p className="text-sm text-gray-500">
-              Lorem ipsum dolor sit amet consectetur.
+            Fashion enthusiast, writer, ethical hacker, and seasonal web developer—blending creativity, security, and digital innovation.
             </p>
 
             {/* Social Media Links */}
