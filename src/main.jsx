@@ -1,77 +1,68 @@
-import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
-import './index.css'
-//import App from './App.jsx'
-import {createBrowserRouter,RouterProvider } from "react-router-dom"
-import PostListPage from "../src/routes/PostListPage.jsx"
-import SinglePost from "../src/routes/SinglePostPage.jsx"
-import About from "../src/routes/About.jsx"
-import Write from "../src/routes/Write.jsx"
-import Homepage from "../src/routes/Homepage.jsx"
-import Mainlayout from './layout/Mainlayout.jsx'
-// import  {ClerkProvider}  from "@clerk/clerk-react"
+import { StrictMode } from "react";
+import { createRoot } from "react-dom/client";
+import "./index.css";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-import Habi from './routes/Habi.jsx'
+import { AuthProvider } from "./layout/AuthContext.jsx"; // Import AuthProvider
+
+// Import Routes & Layouts
+import PostListPage from "./routes/PostListPage.jsx";
+import SinglePost from "./routes/SinglePostPage.jsx";
+import About from "./routes/About.jsx";
+import Write from "./routes/Write.jsx";
+import Homepage from "./routes/Homepage.jsx";
+import Mainlayout from "./layout/Mainlayout.jsx";
+import Dashboard from "./components/Dashboard.jsx";
+import UsersList from "./components/Users.jsx";
+import AdminLogin from "./routes/Login.jsx";
+import AdminRegister from "./routes/Register.jsx";
+import AdminLayout from "./routes/AdminLayout.jsx";
+import Habi from "./routes/Habi.jsx";
+
+import ManagePosts from "./components/ManagePost.jsx";
+import Edit from "./components/Edit.jsx";
+
 const queryClient = new QueryClient();
-// Import your Publishable Key
-
-// const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY
-
-// if (!PUBLISHABLE_KEY) {
-//   throw new Error("Missing Publishable Key")
-// }
-
-
 
 const router = createBrowserRouter([
- {
-  element : <Mainlayout />,
-  children : [
-    {
-      path :"/",
-      element : <Homepage />
-    },
-    {
-      path : "/about",
-      element: <About />
-    }
-  
-    ,
-    {
-      path : "/posts",
-      element: <PostListPage />
-    }
-    ,
-    {
-      path : "/:slug",
-      element: <SinglePost />
-     }
-    ,
-    {
-      path : "/about",
-      element: <About />
-    }
-    // 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
-    ,
-    {
-      path : "/write",
-      element: <Write />
-    }
-  ]
- }
-])
+  {
+    element: <Mainlayout />,
+    children: [
+      { path: "/", element: <Homepage /> },
+      { path: "/about", element: <About /> },
+      { path: "/posts", element: <PostListPage /> },
+      { path: "/login", element: <AdminLogin /> },
+      { path: "/register", element: <AdminRegister /> },
+      { path: "/:slug", element: <SinglePost /> },
+      { path: "/write", element: <Write /> },
+      
+      // ✅ Protect Admin Routes
+      {
+        path: "/admin",
+        element: <AdminLayout />,
+        children: [
+          { path: "/admin/dashboard", element: <Dashboard /> }, // Default admin page
+      { path: "/admin/write", element: <Write /> },
 
-createRoot(document.getElementById('root')).render(
+          { path: "/admin/manage", element: <ManagePosts /> },
+         {path : "/admin/edit/:slug", element : <Edit />} ,
+          { path: "/admin/users", element: <UsersList /> },
+        ],
+      },
+    ],
+  },
+]);
+
+createRoot(document.getElementById("root")).render(
   <StrictMode>
- {/* <ClerkProvider publishableKey={PUBLISHABLE_KEY}> */}
+    <AuthProvider> {/* ✅ Wrap everything inside AuthProvider */}
       <QueryClientProvider client={queryClient}>
         <RouterProvider router={router} />
         <ToastContainer position="bottom-right" />
       </QueryClientProvider>
-    {/* </ClerkProvider> */}
-</StrictMode>
- 
-)
+    </AuthProvider>
+  </StrictMode>
+);

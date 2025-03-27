@@ -21,6 +21,7 @@ const PostListPage = () => {
           <SideMenu />
         </div>
       </div>
+      
     </div>
   );
 };
