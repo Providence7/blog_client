@@ -20,10 +20,9 @@ import UsersList from "./components/Users.jsx";
 import AdminLogin from "./routes/Login.jsx";
 import AdminRegister from "./routes/Register.jsx";
 import AdminLayout from "./routes/AdminLayout.jsx";
-import Habi from "./routes/Habi.jsx";
-
 import ManagePosts from "./components/ManagePost.jsx";
 import Edit from "./components/Edit.jsx";
+import Forum from "./routes/Forum.jsx";
 
 const queryClient = new QueryClient();
 
@@ -38,7 +37,7 @@ const router = createBrowserRouter([
       { path: "/register", element: <AdminRegister /> },
       { path: "/:slug", element: <SinglePost /> },
       { path: "/write", element: <Write /> },
-      { path: "", element: <Habi /> },
+      { path: "forum", element: <Forum /> },
 
       // ✅ Protect Admin Routes
       {
@@ -80,36 +79,38 @@ if ("serviceWorker" in navigator) {
 }
 
 // Install Prompt Logic
+// Main.jsx
+
 let deferredPrompt;
+const installButton = document.getElementById('install-button');
+
 window.addEventListener('beforeinstallprompt', (event) => {
   // Prevent the default browser prompt
   event.preventDefault();
   deferredPrompt = event;
 
-  // Show a custom install button or any action to trigger the install prompt
-  const installButton = document.getElementById('install-button');
-  
-  // Check if the app is already installed
-  if (window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone) {
-    // Hide the install button if the app is already installed
-    installButton.style.display = 'none';
-  } else {
-    // Otherwise, show the install button
-    installButton.style.display = 'block';
+  // Show custom install button
+  installButton.style.display = 'block';
 
-    installButton.addEventListener('click', () => {
-      // Show the install prompt
-      deferredPrompt.prompt();
+  installButton.addEventListener('click', () => {
+    // Trigger the installation prompt
+    deferredPrompt.prompt();
 
-      // Wait for the user to respond to the prompt
-      deferredPrompt.userChoice.then((choiceResult) => {
-        if (choiceResult.outcome === 'accepted') {
-          console.log('User accepted the install prompt');
-        } else {
-          console.log('User dismissed the install prompt');
-        }
-        deferredPrompt = null;
-      });
+    // Wait for the user to respond to the prompt
+    deferredPrompt.userChoice.then((choiceResult) => {
+      if (choiceResult.outcome === 'accepted') {
+        console.log('User accepted the install prompt');
+      } else {
+        console.log('User dismissed the install prompt');
+      }
+      // Reset the deferred prompt
+      deferredPrompt = null;
+      installButton.style.display = 'none'; // Optionally hide the button after prompt is shown
     });
-  }
+  });
 });
+
+// Check if the app is installed
+if (window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone) {
+  installButton.style.display = 'none';  // Hide the install button if app is already installed
+}

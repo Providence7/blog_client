@@ -19,13 +19,8 @@ const CommentSection = ({ slug }) => {
   // Handle Google Sign-in
   const handleGoogleLogin = async () => {
     const provider = new GoogleAuthProvider();
-    // const isMobile = () => /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
     try {
-      // if (isMobile()) {
-      //   // Use redirect for mobile
-      //   await signInWithRedirect(auth, provider);
-      // } else {
-        // Use popup for desktop
+    
         const result = await signInWithPopup(auth, provider);
       const user = result.user;
       
