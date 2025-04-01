@@ -19,7 +19,7 @@ const PostListItem = ({ post }) => {
         </Link>
         <div className="flex items-center gap-2 text-gray-400 text-sm">
           <span>Written by</span>
-          <Link className="text-blue-800">Ease</Link>
+          <Link className="text-blue-800">SyberTailor</Link>
           <span className="hidden md:flex">on</span>
           <Link className="text-blue-800 hidden md:flex ">{post.category}</Link>
           <span className="font-normal text-xs">{format(post.createdAt)}</span>

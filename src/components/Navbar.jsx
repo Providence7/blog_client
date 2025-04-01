@@ -19,7 +19,7 @@ const Navbar = () => {
             <span className="font-bold text-3xl"> S</span>yber
           </span>
           <span className="text-[#46249c] font-bold text-2xl ">
-            <span className="font-bold text-3xl">T</span>ailor
+            <span className="font-bold text-3xl">F</span>ashion
           </span>
         </div>
       </Link>

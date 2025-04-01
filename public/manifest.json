@@ -1,18 +1,19 @@
 {
-    "name": "My Fashion Blog",
-    "short_name": "FashionBlog",
+    "name": "SyberFashion",
+    "short_name": "SyberFashion",
+    "description": "Discover creative fashion",
     "start_url": "/",
     "display": "standalone",
-    "background_color": "#000000",
-    "theme_color": "#FFD700",
+    "background_color": "#ffffff",
+    "theme_color": "#46249c",
     "icons": [
       {
-        "src": "/icon/blog1.png",
+        "src": "icon/blog1.png",
         "sizes": "192x192",
         "type": "image/png"
       },
       {
-        "src": "/icon/blog2.png",
+        "src": "icon/blog2.png",
         "sizes": "512x512",
         "type": "image/png"
       }
