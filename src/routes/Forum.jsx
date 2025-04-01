@@ -29,52 +29,41 @@ const Forum = () => {
     return () => unsubscribe();
   }, []);
 
+  // Fetch all topics
   useEffect(() => {
     const fetchTopics = async () => {
       try {
         const response = await axios.get(`${import.meta.env.VITE_API_URL}/forum/topics`);
-        if (Array.isArray(response.data)) {
-          setTopics(response.data);
-          setFilteredTopics(response.data);
-        } else {
-          console.error('Expected an array but received:', response.data);
-          setTopics([]);
-          setFilteredTopics([]);
-        }
+        setTopics(Array.isArray(response.data) ? response.data : []);
+        setFilteredTopics(Array.isArray(response.data) ? response.data : []);
       } catch (error) {
         console.error('Error fetching topics:', error);
         setTopics([]);
         setFilteredTopics([]);
       }
     };
-
     fetchTopics();
   }, []);
+
   const handleGoogleLogin = async () => {
     const provider = new GoogleAuthProvider();
     try {
-    
-        const result = await signInWithPopup(auth, provider);
+      const result = await signInWithPopup(auth, provider);
       const user = result.user;
-      
-      const userData = {
+
+      setUser({
         googleId: user.uid,
         email: user.email,
         username: user.displayName,
-      };
-
-      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/auth/google-login`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(userData),
       });
 
-      const data = await res.json();
-      setUser(data.user);
+      toast.success(`Welcome ${user.displayName}`);
     } catch (error) {
       console.error("Google login error:", error);
+      toast.error('Failed to log in with Google');
     }
   };
+
   const handleCreateTopic = async () => {
     if (!topicTitle || !topicDescription) {
       toast.error('Title and description are required');
@@ -87,13 +76,16 @@ const Forum = () => {
         description: topicDescription,
       });
 
-      const newTopic = response.data;
-      setTopics([newTopic, ...topics]);
-      setFilteredTopics([newTopic, ...topics]);
-      setTopicTitle('');
-      setTopicDescription('');
-      toast.success('Topic created successfully');
+      if (response.data) {
+        const newTopic = response.data;
+        setTopics((prev) => [newTopic, ...prev]);
+        setFilteredTopics((prev) => [newTopic, ...prev]);
+        setTopicTitle('');
+        setTopicDescription('');
+        toast.success('Topic created successfully');
+      }
     } catch (error) {
+      console.error('Failed to create topic:', error);
       toast.error('Failed to create topic');
     }
   };
@@ -104,25 +96,33 @@ const Forum = () => {
       return;
     }
 
-    const newCommentData = {
-      user: user.username,
-      text: newComment,
-    };
+    if (!newComment.trim()) {
+      toast.error('Comment cannot be empty!');
+      return;
+    }
 
     try {
-      const response = await axios.post(`${import.meta.env.VITE_API_URL}/forum/${topicId}/comments`, newCommentData);
+      const response = await axios.post(`${import.meta.env.VITE_API_URL}/forum/${topicId}/comments`, {
+        user: user.username,
+        text: newComment,
+      });
 
-      const updatedTopics = topics.map((topic) =>
-        topic._id === topicId
-          ? { ...topic, comments: [...topic.comments, response.data] }
-          : topic
-      );
-
-      setTopics(updatedTopics);
-      setFilteredTopics(updatedTopics);
-      setNewComment('');
-      toast.success('Comment added successfully');
+      if (response.data) {
+        setTopics((prevTopics) =>
+          prevTopics.map((topic) =>
+            topic._id === topicId ? { ...topic, comments: response.data.comments } : topic
+          )
+        );
+        setFilteredTopics((prevTopics) =>
+          prevTopics.map((topic) =>
+            topic._id === topicId ? { ...topic, comments: response.data.comments } : topic
+          )
+        );
+        setNewComment('');
+        toast.success('Comment added successfully');
+      }
     } catch (error) {
+      console.error('Failed to add comment:', error);
       toast.error('Failed to add comment');
     }
   };
@@ -130,6 +130,11 @@ const Forum = () => {
   const handleSearch = (e) => {
     const query = e.target.value.toLowerCase();
     setSearchQuery(query);
+
+    if (!query.trim()) {
+      setFilteredTopics(topics);
+      return;
+    }
 
     const filtered = topics.filter(
       (topic) =>
@@ -144,7 +149,7 @@ const Forum = () => {
     <div className="container mx-auto p-4">
       <h1 className="text-center font-bold text-4xl mb-4">Forum</h1>
 
-      {/* Search Bar (Now at the Top) */}
+      {/* Search Bar (At the Top) */}
       <input
         type="text"
         placeholder="Search topics..."
