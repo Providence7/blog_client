@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import { GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut } from "firebase/auth";
 import { toast } from "react-toastify";
 import { auth } from "../layout/console.js";
 
@@ -116,6 +116,23 @@ const Forum = () => {
 
   const navigate = useNavigate();
 
+  // 🟢 Persist authentication state on page refresh
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setUser({
+          googleId: user.uid,
+          email: user.email,
+          username: user.displayName,
+        });
+      } else {
+        setUser(null);
+      }
+    });
+
+    return () => unsubscribe(); // Cleanup function to avoid memory leaks
+  }, []);
+
   // Google login method
   const handleGoogleLogin = async () => {
     const provider = new GoogleAuthProvider();
@@ -123,24 +140,28 @@ const Forum = () => {
       const result = await signInWithPopup(auth, provider);
       const user = result.user;
 
-      const userData = {
+      setUser({
         googleId: user.uid,
         email: user.email,
         username: user.displayName,
-      };
-
-      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/auth/google-login`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(userData),
       });
 
-      const data = await res.json();
-      setUser(data.user);
-      toast.success(`Welcome ${data.user.username}`);
+      toast.success(`Welcome ${user.displayName}`);
     } catch (error) {
       console.error("Google login error:", error);
       toast.error("Failed to log in with Google");
+    }
+  };
+
+  // 🛑 Logout function
+  const handleLogout = async () => {
+    try {
+      await signOut(auth);
+      setUser(null);
+      toast.success("Logged out successfully");
+    } catch (error) {
+      console.error("Logout error:", error);
+      toast.error("Failed to log out");
     }
   };
 
@@ -190,6 +211,29 @@ const Forum = () => {
         </p>
       </div>
 
+      {/* 🟢 Show login button if user is not signed in */}
+      {!user ? (
+        <div className="text-center mb-6">
+          <button
+            onClick={handleGoogleLogin}
+            className="bg-blue-500 text-white px-4 py-2 rounded-lg text-sm font-medium"
+          >
+            Log in with Google
+          </button>
+        </div>
+      ) : (
+        <div className="text-center mb-6">
+          <p className="text-sm">Welcome, <strong>{user.username}</strong></p>
+          <button
+            onClick={handleLogout}
+            className="bg-red-500 text-white px-4 py-2 rounded-lg text-sm font-medium mt-2"
+          >
+            Logout
+          </button>
+        </div>
+      )}
+
+      {/* Search Bar */}
       <div className="flex justify-center mb-6">
         <input
           type="text"
@@ -200,6 +244,7 @@ const Forum = () => {
         />
       </div>
 
+      {/* Forum Topics */}
       {filteredTopics.map((topic) => {
         const isExpanded = expandedTopics[topic.id];
         const visibleComments = isExpanded ? topic.comments : topic.comments.slice(0, 2);
@@ -216,14 +261,14 @@ const Forum = () => {
 
               {visibleComments.map((comment) => (
                 <div key={comment.id} className="p-1 border-t text-center py-3 text-sm text-gray-700">
-                  <p className="font-semibold"><strong className="text-[#46249c]">{comment.user}:</strong> {comment.text}</p>
+                  <p><strong className="text-[#46249c]">{comment.user}:</strong> {comment.text}</p>
                 </div>
               ))}
 
               {topic.comments.length > 2 && (
                 <div className="text-center mt-4">
                   <button
-                    className=" text-[#c4458f] underline text-sm"
+                    className="text-blue-600 underline text-sm"
                     onClick={() => toggleComments(topic.id)}
                   >
                     {isExpanded ? "Hide Comments" : "Read More Comments"}
@@ -231,16 +276,7 @@ const Forum = () => {
                 </div>
               )}
             </div>
-            {!user && (
-      <div className="text-center mb-6">
-        <button
-          onClick={handleGoogleLogin}
-          className="bg-blue-500 text-white px-4 py-2 rounded-lg text-sm font-medium"
-        >
-          Log in to comment and create a topic
-        </button>
-      </div>
-    )}
+
             {user && (
               <div className="mt-2">
                 <input
