@@ -4,6 +4,7 @@ import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { toast } from "react-toastify";
 import { auth } from "../layout/console.js";
 
+// ✅ Dummy data for forum topics and comments
 const initialTopics = [
   {
     id: 1,
@@ -107,11 +108,13 @@ const initialTopics = [
 ];
 
 const Forum = () => {
-  const [user, setUser] = useState(null); 
-  const [newComment, setNewComment] = useState(""); 
+  const [user, setUser] = useState(null);
+  const [newComment, setNewComment] = useState("");
   const [topics, setTopics] = useState(initialTopics);
-  const [searchKeyword, setSearchKeyword] = useState(""); 
-  const navigate = useNavigate(); 
+  const [searchKeyword, setSearchKeyword] = useState("");
+  const [expandedTopics, setExpandedTopics] = useState({}); // Track expanded comments
+
+  const navigate = useNavigate();
 
   // Google login method
   const handleGoogleLogin = async () => {
@@ -154,7 +157,6 @@ const Forum = () => {
       text: newComment,
     };
 
-    // Find the topic and add the new comment
     const updatedTopics = topics.map((topic) =>
       topic.id === topicId
         ? { ...topic, comments: [...topic.comments, newCommentData] }
@@ -162,9 +164,18 @@ const Forum = () => {
     );
 
     setTopics(updatedTopics);
-    setNewComment(""); 
+    setNewComment("");
   };
 
+  // Toggle comments visibility
+  const toggleComments = (topicId) => {
+    setExpandedTopics((prev) => ({
+      ...prev,
+      [topicId]: !prev[topicId],
+    }));
+  };
+
+  // Filter topics based on search
   const filteredTopics = topics.filter((topic) =>
     topic.title.toLowerCase().includes(searchKeyword.toLowerCase()) ||
     topic.description.toLowerCase().includes(searchKeyword.toLowerCase())
@@ -189,38 +200,67 @@ const Forum = () => {
         />
       </div>
 
-      {filteredTopics.map((topic) => (
-        <div key={topic.id} className="mb-4 border-b">
-          <h2 className="text-xl font-semibold text-center text-[#c4458f]">{topic.title}</h2>
-          <p className="italic text-xs text-center text-blue-950 mt-2 font-bold">{topic.description}</p>
+      {filteredTopics.map((topic) => {
+        const isExpanded = expandedTopics[topic.id];
+        const visibleComments = isExpanded ? topic.comments : topic.comments.slice(0, 2);
 
-          <div className="my-5">
-            <h3 className="text-lg font-medium text-center mb-6 underline italic text-gray-950">
-              Comments
-            </h3>
-            {topic.comments.map((comment) => (
-              <div key={comment.id} className="p-1 border-t text-center py-3 text-sm text-gray-700">
-                <p><strong className="text-[#46249c]">{comment.user}:</strong> {comment.text}</p>
-              </div>
-            ))}
-          </div>
+        return (
+          <div key={topic.id} className="mb-4 border-b pb-4">
+            <h2 className="text-xl font-semibold text-center text-[#c4458f]">{topic.title}</h2>
+            <p className="italic text-xs text-center text-blue-950 mt-2 font-bold">{topic.description}</p>
 
-          {user && (
-            <div className="mt-2">
-              <input
-                type="text"
-                placeholder="Add a comment"
-                className="p-2 border border-gray-300 text-sm w-full"
-                value={newComment}
-                onChange={(e) => setNewComment(e.target.value)}
-              />
-              <button onClick={() => handleAddComment(topic.id)} className="mt-2 p-2 bg-blue-500 text-white rounded text-sm">
-                Add Comment
-              </button>
+            <div className="my-5">
+              <h3 className="text-lg font-medium text-center mb-6 underline italic text-gray-950">
+                Comments
+              </h3>
+
+              {visibleComments.map((comment) => (
+                <div key={comment.id} className="p-1 border-t text-center py-3 text-sm text-gray-700">
+                  <p className="font-semibold"><strong className="text-[#46249c]">{comment.user}:</strong> {comment.text}</p>
+                </div>
+              ))}
+
+              {topic.comments.length > 2 && (
+                <div className="text-center mt-4">
+                  <button
+                    className=" text-[#c4458f] underline text-sm"
+                    onClick={() => toggleComments(topic.id)}
+                  >
+                    {isExpanded ? "Hide Comments" : "Read More Comments"}
+                  </button>
+                </div>
+              )}
             </div>
-          )}
-        </div>
-      ))}
+            {!user && (
+      <div className="text-center mb-6">
+        <button
+          onClick={handleGoogleLogin}
+          className="bg-blue-500 text-white px-4 py-2 rounded-lg text-sm font-medium"
+        >
+          Log in to comment and create a topic
+        </button>
+      </div>
+    )}
+            {user && (
+              <div className="mt-2">
+                <input
+                  type="text"
+                  placeholder="Add a comment"
+                  className="p-2 border border-gray-300 text-sm w-full"
+                  value={newComment}
+                  onChange={(e) => setNewComment(e.target.value)}
+                />
+                <button
+                  onClick={() => handleAddComment(topic.id)}
+                  className="mt-2 p-2 bg-blue-500 text-white rounded text-sm"
+                >
+                  Add Comment
+                </button>
+              </div>
+            )}
+          </div>
+        );
+      })}
     </div>
   );
 };
