@@ -69,11 +69,11 @@ const SinglePostPage = () => {
                 w="48"
                 h="48"
               />
-              <Link className="text-blue-800">CyberTailor</Link>
+              <Link className="text-blue-800">Ease</Link>
             </div>
 
             <p className="text-sm text-gray-500">
-            Fashion enthusiast, writer, ethical hacker, and seasonal web developer—blending creativity, security, and digital innovation.
+            Fashion enthusiast, writer, ethical hacker, and seasonal web developer — creativity, security, and digital innovation.
             </p>
 
             {/* Social Media Links */}

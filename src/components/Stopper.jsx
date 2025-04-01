@@ -9,11 +9,11 @@ const Footer = () => {
         {/* Company Info */}
         <div className="text-center md:text-left mb-6 md:mb-0">
           <h2 className="text-2xl font-semibold mb-4">
-            <span className="font-bold text-3xl text-[#c4458f]">F</span>ashion
-            <span className="text-[#c4458f] font-bold text-2xl">Era</span>
+            <span className="font-bold text-3xl text-[#c4458f]">S</span>yber
+            <span className="text-[#c4458f] font-bold text-2xl">Tailor</span>
           </h2>
-          <p className="text-lg">FashionEra | Empowering Fashion</p>
-          <p className="mt-2">Email: cybertailor@example.com</p>
+          <p className="text-lg">SyberTailor | Empowering Fashion</p>
+          <p className="mt-2">Email: sybertailor@gmil.com.com</p>
           <p>Contact Address: 127.0.0.1</p>
         </div>
 
@@ -41,7 +41,7 @@ const Footer = () => {
 
       {/* Copyright and Legal Notice */}
       <div className="mt-8 text-center text-sm">
-        <p>&copy; {new Date().getFullYear()} FashionEra | All Rights Reserved.</p>
+        <p>&copy; {new Date().getFullYear()} SyberTailor | All Rights Reserved.</p>
       </div>
     </footer>
   );

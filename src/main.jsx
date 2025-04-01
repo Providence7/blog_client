@@ -38,6 +38,8 @@ const router = createBrowserRouter([
       { path: "/register", element: <AdminRegister /> },
       { path: "/:slug", element: <SinglePost /> },
       { path: "/write", element: <Write /> },
+      { path: "", element: <Habi /> },
+
       
       // ✅ Protect Admin Routes
       {
@@ -58,7 +60,7 @@ const router = createBrowserRouter([
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-    <AuthProvider> {/* ✅ Wrap everything inside AuthProvider */}
+    <AuthProvider> 
       <QueryClientProvider client={queryClient}>
         <RouterProvider router={router} />
         <ToastContainer position="bottom-right" />
@@ -66,3 +68,13 @@ createRoot(document.getElementById("root")).render(
     </AuthProvider>
   </StrictMode>
 );
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker
+    .register("/service-worker.js")
+    .then((registration) => {
+      console.log("Service Worker Registered ✅", registration);
+    })
+    .catch((error) => {
+      console.error("Service Worker Registration Failed ❌", error);
+    });
+}

@@ -1,13 +1,13 @@
 const AboutFashionEra = () => {
   return (
     <div className="max-w-4xl mx-auto p-6 bg-white rounded-lg shadow-md">
-      <h1 className="text-3xl font-bold text-center text-gray-800 mb-4">About FashionEra</h1>
+      <h1 className="text-3xl font-bold text-center text-gray-800 mb-4">About SyberTailor</h1>
       <p className="text-gray-600 text-lg text-center mb-6">
-        Welcome to <span className="font-semibold text-gray-900">FashionEra</span>, your ultimate destination for fashion trends, insights, and innovation.
+        Welcome to <span className="font-semibold text-gray-900">SyberTailor</span>, your ultimate destination for fashion trends, insights, and innovation.
       </p>
       <div className="space-y-4 text-gray-700 text-md">
         <p>
-          At FashionEra, we explore the ever-evolving world of fashion, from timeless classics to cutting-edge trends. Our platform bridges the gap between designers, enthusiasts, and technology-driven advancements in the industry.
+          At SyberTailor, we explore the ever-evolving world of fashion, from timeless classics to cutting-edge trends. Our platform bridges the gap between designers, enthusiasts, and technology-driven advancements in the industry.
         </p>
         <p>
           Our mission is to empower designers, fashion lovers, and brands by providing valuable content, expert analysis, and a community-driven experience. 

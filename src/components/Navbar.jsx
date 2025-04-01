@@ -16,10 +16,10 @@ const Navbar = () => {
       <Link to={"/"}>
         <div>
           <span className="italic text-[#c4458f] font-bold text-xl">
-            <span className="font-bold text-3xl"> F</span>ashion
+            <span className="font-bold text-3xl"> S</span>yber
           </span>
           <span className="text-[#46249c] font-bold text-2xl ">
-            <span className="font-bold text-3xl">E</span>ra
+            <span className="font-bold text-3xl">T</span>ailor
           </span>
         </div>
       </Link>
@@ -47,7 +47,6 @@ const Navbar = () => {
       {/* DESKTOP MENU */}
       <div className="hidden md:flex items-center gap-8 xl:gap-12 font-medium">
         <Link to="/">Home</Link>
-        <Link to="/posts?sort=trending">Trending</Link>
         <Link to="/posts?sort=popular">Most Popular</Link>
         <Link to="/about">About</Link>
 
