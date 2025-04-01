@@ -36,7 +36,7 @@ const Navbar = () => {
               <X size={32} />
             </button>
             <Link to="/" onClick={() => setOpen(false)}>Home</Link>
-            <Link to="/posts?sort=trending" onClick={() => setOpen(false)}>Trending</Link>
+            <Link to="/forum" onClick={() => setOpen(false)}>Forum</Link>
             <Link to="/posts?sort=popular" onClick={() => setOpen(false)}>Most Popular</Link>
             <Link to="/about" onClick={() => setOpen(false)}>About</Link>
            
@@ -47,6 +47,7 @@ const Navbar = () => {
       {/* DESKTOP MENU */}
       <div className="hidden md:flex items-center gap-8 xl:gap-12 font-medium">
         <Link to="/">Home</Link>
+        <Link to="/forum">Forum</Link>
         <Link to="/posts?sort=popular">Most Popular</Link>
         <Link to="/about">About</Link>
 
