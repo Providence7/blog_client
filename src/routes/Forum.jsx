@@ -198,14 +198,15 @@ const Forum = () => {
 )}
 
       {/* Create New Topic Button */}
-      <div className="fixed bottom-40 right-4">
-        <button
-          onClick={() => setShowCreateTopicModal(true)}
-          className="bg-green-500 text-white px-4 py-2 rounded-lg"
-        >
-          Create Topic
-        </button>
-      </div>
+      <div className="fixed bottom-4 left-1/2 transform -translate-x-1/2 flex justify-center">
+  <button
+    onClick={() => setShowCreateTopicModal(true)}
+    className="bg-green-500 text-white px-4 py-2 rounded-lg"
+  >
+    Create Topic
+  </button>
+</div>
+
 
       {/* Modal for creating a new topic */}
       {showCreateTopicModal && (
