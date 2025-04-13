@@ -169,7 +169,7 @@ const Forum = () => {
   <input
     type="text"
     placeholder="Search topics..."
-    className="p-3 border border-gray-300 rounded-md text-sm w-full md:w-1/2 focus:outline-none focus:ring-2 focus:ring-purple-500"
+    className="p-3 border border-gray-400 rounded-md text-sm w-full md:w-1/2 focus:outline-none focus:ring-2 focus:ring-purple-500"
     value={searchKeyword}
     onChange={(e) => setSearchKeyword(e.target.value)}
   />
