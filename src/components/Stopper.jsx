@@ -13,7 +13,7 @@ const Footer = () => {
             <span className="text-[#c4458f] font-bold text-2xl">Fashion</span>
           </h2>
           <p className="text-lg">SyberFashion | Empowering Fashion</p>
-          <p className="mt-2">Email: sybertailor@gmil.com.com</p>
+          <p className="mt-2">Email: sybertailor@gmail.com.com</p>
           <p>Contact Address: 127.0.0.1</p>
         </div>
 
