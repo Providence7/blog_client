@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { auth } from "../layout/console.js";
 import { GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut } from "firebase/auth";
+import { toast } from "react-toastify";
 
 const CommentSection = ({ slug }) => {
   const [user, setUser] = useState(null);
@@ -16,39 +17,40 @@ const CommentSection = ({ slug }) => {
     return () => unsubscribe(); // Cleanup subscription
   }, []);
 
-  // Handle Google Sign-in
+  // Google login method
   const handleGoogleLogin = async () => {
     const provider = new GoogleAuthProvider();
     try {
-    
-        const result = await signInWithPopup(auth, provider);
+      const result = await signInWithPopup(auth, provider);
       const user = result.user;
-      
-      const userData = {
+
+      setUser({
         googleId: user.uid,
         email: user.email,
         username: user.displayName,
-      };
-
-      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/auth/google-login`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(userData),
       });
 
-      const data = await res.json();
-      setUser(data.user);
+      toast.success(`Welcome ${user.displayName}`);
+          // Reload the page to ensure the comments and other components are updated
+    window.location.reload();
     } catch (error) {
       console.error("Google login error:", error);
+      toast.error("Failed to log in with Google");
     }
   };
 
-  // Handle Logout
-  const handleLogout = async () => {
-    await signOut(auth);
-    setUser(null);
-  };
 
+  // Handle Logout
+ const handleLogout = async () => {
+    try {
+      await signOut(auth);
+      setUser(null);
+      toast.success("Logged out successfully");
+    } catch (error) {
+      console.error("Logout error:", error);
+      toast.error("Failed to log out");
+    }
+  };
   // Fetch Comments for the Post (by Slug)
   useEffect(() => {
     const fetchComments = async () => {
