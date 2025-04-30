@@ -1,11 +1,13 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-
+import { useAuth } from "../context/AuthContext.jsx";
 const AdminLogin = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const navigate = useNavigate();
+  const { login } = useAuth();
+  
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -22,8 +24,8 @@ const AdminLogin = () => {
 
       if (!response.ok) throw new Error(data.message || "Login failed");
 
-      localStorage.setItem("adminToken", data.token);
-      navigate("/admin"); // Redirect to admin dashboard
+      login(); // ✅ sets in-memory login state
+      navigate("/admin");
     } catch (err) {
       setError(err.message);
     }

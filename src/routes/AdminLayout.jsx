@@ -3,20 +3,31 @@ import { Link, Outlet } from "react-router-dom";
 import { FiMenu, FiX, FiHome, FiUser, FiFileText, FiLogOut, FiFilePlus } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import { useAuth } from '../context/AuthContext'; // Adjust the path to AuthContext if necessary
+
 const AdminLayout = () => {
-  const [sidebarOpen, setSidebarOpen] = useState(false);
+            const [sidebarOpen, setSidebarOpen] = useState(false);
+  
   const navigate = useNavigate();
+  const { logout } = useAuth(); // Make sure this is inside the functional component
 
   const handleLogout = async () => {
     try {
+      // Call the backend to clear the session
       await axios.post(`${import.meta.env.VITE_API_URL}/api/admin/logout`, {}, { withCredentials: true });
+
+      // Call the logout function from the context
+      logout();
+
+      // Show a success message
       toast.success("Logged out successfully");
-      navigate("/login"); // Redirect to admin login page
+
+      // Redirect to login page
+      navigate("/login");
     } catch (error) {
       toast.error("Logout failed");
     }
   };
-
 
   return (
     <div className="flex bg-gray-100 min-h-screen">

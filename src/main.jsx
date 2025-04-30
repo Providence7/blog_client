@@ -6,7 +6,8 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-import { AuthProvider } from "./layout/AuthContext.jsx"; // Import AuthProvider
+import { AuthProvider } from "./context/AuthContext.jsx"; // Import AuthProvider
+import ProtectedRoute from "./components/ProtectedRoute"; // adjust path if needed
 
 // Import Routes & Layouts
 import PostListPage from "./routes/PostListPage.jsx";
@@ -36,28 +37,34 @@ const router = createBrowserRouter([
       { path: "/login", element: <AdminLogin /> },
       { path: "/register", element: <AdminRegister /> },
       { path: "/:slug", element: <SinglePost /> },
-      { path: "/write", element: <Write /> },
       { path: "forum", element: <Forum /> },
 
-      // ✅ Protect Admin Routes
+      // ✅ Protected Admin Routes
       {
-        path: "/admin",
-        element: <AdminLayout />,
+        element: <ProtectedRoute />,
         children: [
-          { path: "/admin/dashboard", element: <Dashboard /> }, // Default admin page
-          { path: "/admin/write", element: <Write /> },
-          { path: "/admin/manage", element: <ManagePosts /> },
-          { path: "/admin/edit/:slug", element: <Edit /> },
-          { path: "/admin/users", element: <UsersList /> },
+          {
+            path: "/admin",
+            element: <AdminLayout />,
+            children: [
+              { path: "dashboard", element: <Dashboard /> },
+              { path: "write", element: <Write /> },
+              { path: "manage", element: <ManagePosts /> },
+              { path: "edit/:slug", element: <Edit /> },
+              { path: "users", element: <UsersList /> },
+            ],
+          },
         ],
-      },
+      }
+      
     ],
   },
 ]);
 
+
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-    <AuthProvider>
+    <AuthProvider> {/* 👈 This must wrap everything */}
       <QueryClientProvider client={queryClient}>
         <RouterProvider router={router} />
         <ToastContainer position="bottom-right" />
