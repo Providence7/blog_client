@@ -72,7 +72,7 @@ const Write = () => {
   
 
   return (
-    <div className="h-[calc(100vh-64px)] md:h-[calc(100vh-80px)] flex flex-col gap-6 mb-96">
+    <div className="h-[calc(100vh-64px)] md:h-[calc(100vh-80px)] flex flex-col gap-6">
       <h1 className="text-cl font-light">Create a New Post</h1>
       <form onSubmit={handleSubmit} className="flex flex-col gap-6 flex-1 mb-6">
         <Upload type="image" setProgress={setProgress} setData={setCover}>
@@ -97,7 +97,7 @@ const Write = () => {
           >
             <option value="general">General</option>
             <option value="technology">Technology</option>
-            <option value="spot">Spotlight</option>
+            <option value="spotlight">Spotlight</option>
             <option value="tailor">Tailoring</option>
             <option value="tread">Treads</option>
             <option value="story">Stories</option>
@@ -117,6 +117,7 @@ const Write = () => {
               ▶️
             </Upload>
           </div>
+         
           <ReactQuill
   theme="snow"
   className="flex-1 rounded-xl bg-white  shadow-md custom-quill"
@@ -127,7 +128,7 @@ const Write = () => {
     toolbar: [
       [{ header: [1, 2, false] }],
       ["bold", "italic", "underline", "strike"],
-      [{ list: "ordered" },],
+      [{ list: "ordered" }, { list: "bullet" }],
       ["blockquote", "code-block"],
       [{ align: [] }],
       [{ color: [] }, { background: [] }],

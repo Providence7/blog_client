@@ -54,9 +54,10 @@ const ManagePosts = () => {
               <td className="border p-2">{post.title}</td>
               <td className="border p-2">{post.category || "Uncategorized"}</td>
               <td className="border p-2 flex gap-2 justify-center">
-                <Link to={`/admin/edit/${post._id}`} className="bg-blue-500 text-white px-3 py-1 rounded">
-                  Edit
-                </Link>
+              <Link to={`/admin/edit/${post.slug}`} className="bg-blue-500 text-white px-3 py-1 rounded">
+  Edit
+</Link>
+
                 <button
                   className="bg-red-500 text-white px-3 py-1 rounded"
                   onClick={() => deleteMutation.mutate(post._id)}

@@ -29,7 +29,7 @@ const SinglePostPage = () => {
       {/* Post Details */}
       <div className="flex gap-8">
         <div className="lg:w-3/5 flex flex-col gap-8">
-          <h1 className="text-xl md:text-3xl xl:text-4xl 2xl:text-5xl font-semibold">
+          <h1 className="text-xl mt-10 md:text-3xl xl:text-4xl 2xl:text-5xl font-semibold">
             {data.title}
           </h1>
 
@@ -39,7 +39,7 @@ const SinglePostPage = () => {
             <span className="text-sm font-bold">{format(data.createdAt)}</span>
           </div>
 
-          <p className="text-gray-500 font-medium">{data.desc}</p>
+          {/* <p className="text-gray-500 font-medium">{data.desc}</p> */}
         </div>
 
         {/* Post Image */}
@@ -51,7 +51,7 @@ const SinglePostPage = () => {
       </div>
 
       {/* Post Content */}
-      <div className="flex flex-col md:flex-row gap-12 justify-between">
+      <div className="flex flex-col md:flex-row gap-6 justify-between">
         {/* Text */}
         <div
           className="lg:text-lg flex flex-col gap-6 text-justify"
