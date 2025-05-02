@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, Outlet } from "react-router-dom";
-import { FiMenu, FiX, FiHome, FiUser, FiFileText, FiLogOut, FiFilePlus } from "react-icons/fi";
+import { FiMenu, FiX, FiHome, FiUser, FiFileText, FiLogOut, FiFilePlus,FiMessageCircle, FiMessageSquare } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { useAuth } from '../context/AuthContext'; // Adjust the path to AuthContext if necessary
@@ -53,6 +53,12 @@ const AdminLayout = () => {
           </Link>
            <Link to="/admin/users" className="flex items-center gap-2 p-2 hover:bg-gray-700 rounded">
             <FiUser /> Users
+          </Link>
+          <Link to="/admin/comments" className="flex items-center gap-2 p-2 hover:bg-gray-700 rounded">
+            <FiMessageCircle /> Comments
+          </Link>
+          <Link to="/admin/forum" className="flex items-center gap-2 p-2 hover:bg-gray-700 rounded">
+            <FiMessageSquare /> Forum
           </Link>
           <button onClick={handleLogout}  className="flex items-center gap-2 p-2 hover:bg-red-600 rounded mt-auto">
             <FiLogOut /> Logout

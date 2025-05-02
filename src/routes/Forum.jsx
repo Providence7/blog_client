@@ -13,7 +13,9 @@ const Forum = () => {
   const [searchKeyword, setSearchKeyword] = useState("");
   const [expandedTopics, setExpandedTopics] = useState({});
   const [showCreateTopicModal, setShowCreateTopicModal] = useState(false);
-
+  const [imageFile, setImageFile] = useState(null);
+  const [imagePreview, setImagePreview] = useState(null);
+  const [isCreatingTopic, setIsCreatingTopic] = useState(false); // Track topic creation state
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -41,7 +43,9 @@ const Forum = () => {
         console.error('Error fetching topics:', error);
         toast.error('Failed to fetch topics.');
       }
-    };    fetchTopics();
+    };
+
+    fetchTopics();
     return () => unsubscribe();
   }, []);
 
@@ -50,12 +54,19 @@ const Forum = () => {
     try {
       const result = await signInWithPopup(auth, provider);
       const user = result.user;
-      setUser({
+
+      const userData = {
         googleId: user.uid,
         email: user.email,
         username: user.displayName,
-      });
+      };
+
+      setUser(userData);
       toast.success(`Welcome ${user.displayName}`);
+
+      await axios.post(`${import.meta.env.VITE_API_URL}/api/auth/user`, userData);
+
+      window.location.reload();
     } catch (error) {
       console.error("Google login error:", error);
       toast.error("Failed to log in with Google");
@@ -78,26 +89,25 @@ const Forum = () => {
       toast.error("You must be logged in to comment!");
       return;
     }
-  
+
     const commentData = {
       userId: user.googleId,
       username: user.username,
       text: newComment,
     };
-  
+
     try {
       const response = await axios.post(
         `${import.meta.env.VITE_API_URL}/api/topics/${topicId}/comments`,
-        { comment: commentData }  // Important: wrapped in "comment" key
+        { comment: commentData }
       );
-  
-      // Replace the updated topic in the topics list
+
       setTopics(prevTopics =>
         prevTopics.map(topic =>
           topic._id === topicId ? response.data : topic
         )
       );
-  
+
       setNewComment("");
       toast.success("Comment added!");
     } catch (error) {
@@ -105,7 +115,16 @@ const Forum = () => {
       toast.error("Failed to add comment");
     }
   };
-  
+
+  const handleImageUpload = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    setImageFile(file);
+    const reader = new FileReader();
+    reader.onloadend = () => setImagePreview(reader.result);
+    reader.readAsDataURL(file);
+  };
 
   const handleCreateTopic = async () => {
     if (!user) {
@@ -118,10 +137,41 @@ const Forum = () => {
       return;
     }
 
+    setIsCreatingTopic(true); // Disable the "Create Topic" button
+
+    let imageUrl = '';
+
+    if (imageFile) {
+      const reader = new FileReader();
+
+      reader.onloadend = async () => {
+        const base64 = reader.result;
+
+        try {
+          const uploadRes = await axios.post(`${import.meta.env.VITE_API_URL}/api/topics/upload-image`, {
+            file: base64
+          });
+          imageUrl = uploadRes.data.imageUrl;
+          await createTopic(imageUrl);
+        } catch (err) {
+          toast.error("Image upload failed.");
+          console.error(err);
+          setIsCreatingTopic(false); // Re-enable the "Create Topic" button
+        }
+      };
+
+      reader.readAsDataURL(imageFile);
+    } else {
+      await createTopic();
+    }
+  };
+
+  const createTopic = async (imageUrl = '') => {
     const topicData = {
       title: newTopic.title,
       description: newTopic.description,
       userId: user.googleId,
+      imageUrl
     };
 
     try {
@@ -131,28 +181,30 @@ const Forum = () => {
         setTopics((prevTopics) => [...prevTopics, response.data]);
         setShowCreateTopicModal(false);
         setNewTopic({ title: "", description: "" });
+        setImageFile(null);
+        setImagePreview(null);
         toast.success("Topic created successfully");
       } else {
         toast.error("Unexpected response from server. Please try again.");
       }
     } catch (error) {
       toast.error("Failed to create topic. Please try again.");
+    } finally {
+      setIsCreatingTopic(false); // Re-enable the "Create Topic" button
     }
   };
 
-  const filteredTopics = Array.isArray(topics)
-    ? topics.filter((topic) =>
-        topic.title.toLowerCase().includes(searchKeyword.toLowerCase()) ||
-        topic.description.toLowerCase().includes(searchKeyword.toLowerCase())
-      )
-    : [];
-
   const toggleComments = (topicId) => {
-    setExpandedTopics(prevState => ({
-      ...prevState,
-      [topicId]: !prevState[topicId],
+    setExpandedTopics(prev => ({
+      ...prev,
+      [topicId]: !prev[topicId],
     }));
   };
+
+  const filteredTopics = topics.filter(topic =>
+    topic.title.toLowerCase().includes(searchKeyword.toLowerCase()) ||
+    topic.description.toLowerCase().includes(searchKeyword.toLowerCase())
+  );
 
   return (
     <div className="container mx-0 mt-9">
@@ -163,151 +215,152 @@ const Forum = () => {
         </p>
       </div>
 
-      {/* Show login button if user is not signed in */}
-    {/* Search Bar */}
-<div className="flex justify-center mb-6">
-  <input
-    type="text"
-    placeholder="Search topics..."
-    className="p-3 border border-gray-400 rounded-md text-sm w-full md:w-1/2 focus:outline-none focus:ring-2 focus:ring-purple-500"
-    value={searchKeyword}
-    onChange={(e) => setSearchKeyword(e.target.value)}
-  />
-</div>
-
-{/* Login Section */}
-{!user ? (
-  <div className="text-center mb-6">
-    <button
-      onClick={handleGoogleLogin}
-      className="bg-blue-500 text-white px-6 py-2 rounded-md text-sm font-medium hover:bg-blue-600 transition"
-    >
-      Log in with Google
-    </button>
-  </div>
-) : (
-  <div className="text-center mb-6">
-    <p className="text-sm">Welcome, <strong>{user.username}</strong></p>
-    <button
-      onClick={handleLogout}
-      className="bg-red-500 text-white px-6 py-2 rounded-md text-sm font-medium mt-2 hover:bg-red-600 transition"
-    >
-      Log out
-    </button>
-  </div>
-)}
-
-      {/* Create New Topic Button */}
-      <div className="fixed bottom-4 left-1/2 transform -translate-x-1/2 flex justify-center">
-  <button
-    onClick={() => setShowCreateTopicModal(true)}
-    className="bg-green-500 text-white px-4 py-2 rounded-lg"
-  >
-    Create Topic
-  </button>
-</div>
-
-
-      {/* Modal for creating a new topic */}
-      {showCreateTopicModal && (
-  <div className="fixed inset-0 flex justify-center items-center bg-black bg-opacity-50">
-    <div className="bg-white p-6 rounded-lg w-96 shadow-lg">
-      <h2 className="text-2xl font-semibold text-purple-700 mb-4">Create a New Topic</h2>
-      <input
-        type="text"
-        className="w-full p-3 mb-4 border border-gray-300 rounded-md text-sm"
-        placeholder="Enter topic title"
-        value={newTopic.title}
-        onChange={(e) => setNewTopic({ ...newTopic, title: e.target.value })}
-      />
-      <textarea
-        className="w-full p-3 mb-6 border border-gray-300 rounded-md text-sm"
-        placeholder="Enter topic description"
-        value={newTopic.description}
-        onChange={(e) => setNewTopic({ ...newTopic, description: e.target.value })}
-      />
-      <div className="flex justify-between">
-        <button
-          onClick={handleCreateTopic}
-          className="bg-purple-600 text-white px-6 py-2 rounded-md text-sm hover:bg-purple-700 transition"
-        >
-          Create Topic
-        </button>
-        <button
-          onClick={() => setShowCreateTopicModal(false)}
-          className="bg-gray-300 text-black px-6 py-2 rounded-md text-sm hover:bg-gray-400 transition"
-        >
-          Cancel
-        </button>
+      {/* Search Bar */}
+      <div className="flex justify-center mb-6">
+        <input
+          type="text"
+          placeholder="Search topics..."
+          className="p-3 border border-gray-400 rounded-md text-sm w-full md:w-1/2 focus:outline-none focus:ring-2 focus:ring-purple-500"
+          value={searchKeyword}
+          onChange={(e) => setSearchKeyword(e.target.value)}
+        />
       </div>
-    </div>
-  </div>
-)}
 
-
-      {/* Forum Topics */}
-      {filteredTopics.map((topic) => {
-  const topicId = topic._id;
-  const isExpanded = expandedTopics[topicId];
-  const visibleComments = isExpanded ? topic.comments : topic.comments.slice(0, 2);
-
-  return (
-    <div key={topicId} className="bg-white rounded-xl shadow-md p-6 mb-8 border border-gray-200">
-      {/* Topic Header */}
-      <div className="mb-4 bg-[#f0ecec]">
-        <h2 className="text-2xl font-bold text-center text-purple-700 mb-2">{topic.title}</h2>
-        <p className="text-gray-700 text-center italic">{topic.description}</p>
-      </div>
-      
-
-      {/* Comments List */}
-      <div className="pl-4 border-l-4 border-purple-300 mb-4">
-        <h4 className="text-lg font-bold text-center text-gray-600 mb-2">Comments</h4>
-        {visibleComments.length === 0 ? (
-          <p className="text-gray-400 italic text-sm">No comments yet. Be the first!</p>
-        ) : (
-          visibleComments.map((comment, idx) => (
-            <div key={comment._id || idx} className="mb-3 p-3 bg-gray-50 rounded shadow-sm">
-              <p className="font-semibold italic text-gray-800 text-sm mb-1">
-                🗣 {comment.username}
-              </p>
-              <p className="text-gray-700 text-sm">{comment.text}</p>
-            </div>
-          ))
-        )}
-        {topic.comments.length > 2 && !isExpanded && (
+      {/* Login Section */}
+      {!user ? (
+        <div className="text-center mb-6">
           <button
-            onClick={() => toggleComments(topicId)}
-            className="text-blue-500 text-xs mt-1"
+            onClick={handleGoogleLogin}
+            className="bg-blue-500 text-white px-6 py-2 rounded-md text-sm font-medium hover:bg-blue-600 transition"
           >
-            Show more comments...
+            Log in with Google
           </button>
-        )}
-      </div>
-
-      {/* Comment Form */}
-      {user && (
-        <div className="mt-2 border-t pt-4">
-          <h4 className="text-sm font-semibold text-gray-600 mb-2">Add a comment</h4>
-          <textarea
-            className="w-full p-2 border border-gray-300 rounded-md text-sm mb-2"
-            placeholder="Your comment..."
-            value={newComment}
-            onChange={(e) => setNewComment(e.target.value)}
-          />
+        </div>
+      ) : (
+        <div className="text-center mb-6">
+          <p className="text-sm">Welcome, <strong>{user.username}</strong></p>
           <button
-            onClick={() => handleAddComment(topicId)}
-            className="bg-purple-600 text-white px-4 py-2 rounded-md text-sm hover:bg-purple-700 transition"
+            onClick={handleLogout}
+            className="bg-red-500 text-white px-6 py-2 rounded-md text-sm font-medium mt-2 hover:bg-red-600 transition"
           >
-            Submit Comment
+            Log out
           </button>
         </div>
       )}
-    </div>
-  );
-})}
 
+      {/* Create Topic Button */}
+      <div className="fixed bottom-4 left-1/2 transform -translate-x-1/2 flex justify-center">
+        <button
+          onClick={() => setShowCreateTopicModal(true)}
+          className="bg-green-500 text-white px-4 py-2 rounded-lg"
+          disabled={isCreatingTopic} // Disable while creating topic
+        >
+          {isCreatingTopic ? "Creating..." : "Create Topic"}
+        </button>
+      </div>
 
+      {/* Modal */}
+      {showCreateTopicModal && (
+        <div className="fixed inset-0 flex justify-center items-center bg-black bg-opacity-50">
+          <div className="bg-white p-6 rounded-lg w-96 shadow-lg">
+            <h2 className="text-2xl font-semibold text-purple-700 mb-4">Create a New Topic</h2>
+
+            <input
+              type="text"
+              className="w-full p-3 mb-4 border border-gray-300 rounded-md text-sm"
+              placeholder="Enter topic title"
+              value={newTopic.title}
+              onChange={(e) => setNewTopic({ ...newTopic, title: e.target.value })}
+            />
+            <textarea
+              className="w-full p-3 mb-4 border border-gray-300 rounded-md text-sm"
+              placeholder="Enter topic description"
+              value={newTopic.description}
+              onChange={(e) => setNewTopic({ ...newTopic, description: e.target.value })}
+            />
+            <div className="mb-4">
+              <input
+                type="file"
+                accept="image/*"
+                className="w-full p-3 border border-gray-300 rounded-md text-sm"
+                onChange={handleImageUpload}
+              />
+            </div>
+            <div className="flex justify-between">
+              <button
+                onClick={handleCreateTopic}
+                className="bg-purple-600 text-white px-6 py-2 rounded-md text-sm hover:bg-purple-700 transition"
+                disabled={isCreatingTopic} // Disable button while creating topic
+              >
+                Create Topic
+              </button>
+              <button
+                onClick={() => setShowCreateTopicModal(false)}
+                className="bg-gray-300 text-black px-6 py-2 rounded-md text-sm hover:bg-gray-400 transition"
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Forum Topics */}
+      {filteredTopics.map((topic) => {
+        const topicId = topic._id;
+        const isExpanded = expandedTopics[topicId];
+        const visibleComments = isExpanded ? topic.comments : topic.comments.slice(0, 2);
+
+        return (
+          <div key={topicId} className="bg-white rounded-xl shadow-md p-6 mb-8 border border-gray-200">
+            <div className="mb-4 bg-[#f0ecec]">
+              <h2 className="text-2xl font-bold text-center text-purple-700 mb-2">{topic.title}</h2>
+              <p className="text-gray-700 text-center italic">{topic.description}</p>
+              {/* Show image only after topic creation */}
+              {topic.imageUrl && <img src={topic.imageUrl} alt="Topic" className="w-full h-auto rounded-md mt-4" />}
+            </div>
+
+            <div className="pl-4 border-l-4 border-purple-300 mb-4">
+              <h4 className="text-lg font-bold text-center text-gray-600 mb-2">Comments</h4>
+              {visibleComments.length === 0 ? (
+                <p className="text-gray-400 italic text-sm">No comments yet. Be the first!</p>
+              ) : (
+                visibleComments.map((comment, idx) => (
+                  <div key={idx} className="text-sm text-gray-600 mb-2">
+                    <p><strong>{comment.username}:</strong> {comment.text}</p>
+                  </div>
+                ))
+              )}
+
+              {/* Toggle Comments */}
+              {topic.comments.length > 2 && (
+                <button
+                  onClick={() => toggleComments(topicId)}
+                  className="text-purple-600 text-xs mt-2 hover:text-purple-700 transition"
+                >
+                  {isExpanded ? "Show Less" : `Show ${topic.comments.length - 2} More`}
+                </button>
+              )}
+            </div>
+
+            {/* Add New Comment */}
+            <div className="mt-4">
+              <textarea
+                className="w-full p-3 border border-gray-300 rounded-md text-sm"
+                placeholder="Add a comment..."
+                value={newComment}
+                onChange={(e) => setNewComment(e.target.value)}
+              />
+              <button
+                onClick={() => handleAddComment(topicId)}
+                className="bg-purple-600 text-white px-6 py-2 rounded-md text-sm mt-2 hover:bg-purple-700 transition"
+              >
+                Post Comment
+              </button>
+            </div>
+          </div>
+        );
+      })}
     </div>
   );
 };

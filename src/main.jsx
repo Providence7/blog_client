@@ -22,6 +22,8 @@ import AdminLogin from "./routes/Login.jsx";
 import AdminRegister from "./routes/Register.jsx";
 import AdminLayout from "./routes/AdminLayout.jsx";
 import ManagePosts from "./components/ManagePost.jsx";
+import CommentTable from "./components/CommentTable.jsx";
+import ForumMan from "./components/ForumManage.jsx"
 import Edit from "./components/Edit.jsx";
 import Forum from "./routes/Forum.jsx";
 
@@ -52,6 +54,10 @@ const router = createBrowserRouter([
               { path: "manage", element: <ManagePosts /> },
               { path: "edit/:slug", element: <Edit /> },
               { path: "users", element: <UsersList /> },
+              { path: "comments", element: <CommentTable /> },
+              { path: "forum", element: <ForumMan /> },
+
+
             ],
           },
         ],

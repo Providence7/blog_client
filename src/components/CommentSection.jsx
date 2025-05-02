@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { auth } from "../layout/console.js";
 import { GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut } from "firebase/auth";
 import { toast } from "react-toastify";
-
+import axios from "axios";
 const CommentSection = ({ slug }) => {
   const [user, setUser] = useState(null);
   const [comment, setComment] = useState("");
@@ -23,22 +23,26 @@ const CommentSection = ({ slug }) => {
     try {
       const result = await signInWithPopup(auth, provider);
       const user = result.user;
-
-      setUser({
+  
+      const userData = {
         googleId: user.uid,
         email: user.email,
         username: user.displayName,
-      });
-
+      };
+  
+      setUser(userData);
       toast.success(`Welcome ${user.displayName}`);
-          // Reload the page to ensure the comments and other components are updated
-    window.location.reload();
+  
+      // ✅ Send to backend
+      await axios.post(`${import.meta.env.VITE_API_URL}/api/auth/user`, userData);
+  
+      window.location.reload();
     } catch (error) {
       console.error("Google login error:", error);
       toast.error("Failed to log in with Google");
     }
   };
-
+  
 
   // Handle Logout
  const handleLogout = async () => {
