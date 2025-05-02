@@ -317,7 +317,13 @@ const Forum = () => {
               <h2 className="text-2xl font-bold text-center text-purple-700 mb-2">{topic.title}</h2>
               <p className="text-gray-700 text-center italic">{topic.description}</p>
               {/* Show image only after topic creation */}
-              {topic.imageUrl && <img src={topic.imageUrl} alt="Topic" className="w-full h-auto rounded-md mt-4" />}
+              {topic.imageUrl && (
+  <img 
+    src={topic.imageUrl} 
+    alt="Topic" 
+    className="w-full md:w-3/4 lg:w-2/3 xl:w-1/2 h-auto rounded-md mt-4"
+  />
+)}
             </div>
 
             <div className="pl-4 border-l-4 border-purple-300 mb-4">
