@@ -30,6 +30,7 @@ import Forum from "./routes/Forum.jsx";
 const queryClient = new QueryClient();
 
 const router = createBrowserRouter([
+  // Public routes using Mainlayout
   {
     element: <Mainlayout />,
     children: [
@@ -39,30 +40,27 @@ const router = createBrowserRouter([
       { path: "/login", element: <AdminLogin /> },
       { path: "/register", element: <AdminRegister /> },
       { path: "/:slug", element: <SinglePost /> },
-      { path: "forum", element: <Forum /> },
+      { path: "/forum", element: <Forum /> },
+    ],
+  },
 
-      // ✅ Protected Admin Routes
+  // Protected admin routes, not using Mainlayout
+  {
+    element: <ProtectedRoute />,
+    children: [
       {
-        element: <ProtectedRoute />,
+        path: "/admin",
+        element: <AdminLayout />,
         children: [
-          {
-            path: "/admin",
-            element: <AdminLayout />,
-            children: [
-              { path: "dashboard", element: <Dashboard /> },
-              { path: "write", element: <Write /> },
-              { path: "manage", element: <ManagePosts /> },
-              { path: "edit/:slug", element: <Edit /> },
-              { path: "users", element: <UsersList /> },
-              { path: "comments", element: <CommentTable /> },
-              { path: "forum", element: <ForumMan /> },
-
-
-            ],
-          },
+          { path: "dashboard", element: <Dashboard /> },
+          { path: "write", element: <Write /> },
+          { path: "manage", element: <ManagePosts /> },
+          { path: "edit/:slug", element: <Edit /> },
+          { path: "users", element: <UsersList /> },
+          { path: "comments", element: <CommentTable /> },
+          { path: "forum", element: <ForumMan /> },
         ],
-      }
-      
+      },
     ],
   },
 ]);

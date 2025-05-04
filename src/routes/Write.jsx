@@ -1,4 +1,3 @@
-// import { useAuth, useUser } from "@clerk/clerk-react";
 import "react-quill-new/dist/quill.snow.css";
 import ReactQuill from "react-quill-new";
 import { useMutation } from "@tanstack/react-query";
@@ -46,6 +45,19 @@ const Write = () => {
       }
     }
   }, [video]);
+
+  // Insert random ad at random positions in the content
+  const insertRandomAd = () => {
+    const adPlaceholder = `<div class="ad-placeholder">[Ad - Insert Ad Here]</div>`;
+    const randomPosition = Math.floor(Math.random() * 5); // Random position
+    const newContent = value.split("<p>").map((para, index) => {
+      if (index === randomPosition) {
+        return `${adPlaceholder}${para}`;
+      }
+      return para;
+    }).join("<p>");
+    setValue(newContent);
+  };
 
   const mutation = useMutation({
     mutationFn: async (newPost) => {
@@ -129,6 +141,10 @@ const Write = () => {
             <Upload type="video" setProgress={setProgress} setData={setVideo} setIsUploading={setIsUploading}>
               <button type="button">▶️</button>
             </Upload>
+            {/* Button to insert random ad */}
+            <button type="button" onClick={insertRandomAd} className="p-2 mt-4 text-sm text-gray-500 bg-white shadow-md">
+              Insert Random Ad
+            </button>
           </div>
           <ReactQuill
             ref={quillRef}

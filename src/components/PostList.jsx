@@ -47,6 +47,7 @@ const PostList = () => {
       hasMore={!!hasNextPage}
       loader={<h4>Loading more posts...</h4>}
       // endMessage={<p><b>All posts loaded!</b></p>}
+      className="mt-20"
     >
       {allPosts.map((post) => (
         <PostListItem key={post._id} post={post} />
