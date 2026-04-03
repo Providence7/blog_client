@@ -2,25 +2,65 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="manifest" href="/manifest.json">
-<meta name="theme-color" content="#46249c">
-    <title>SyberFashion</title>
-    <link rel="icon" type="image/png" sizes="192x192" href="/icon/blog1.png">
-<link rel="apple-touch-icon"  type="image/png" sizes="512x512" href="/icon/blog2.png">
+    
+    <title>SyberFashion | Digital Atelier for Avant-Garde Tailoring & Tech</title>
+    
+    <meta name="description" content="Discover the intersection of high-end tailoring and digital innovation. SyberFashion is the premier editorial hub for fashion designers and style enthusiasts.">
+    <meta name="keywords" content="digital fashion design, high-end tailoring, fashion tech trends, bespoke clothing archives, sybertailor, fashion designer community">
+    <meta name="author" content="SyberTailor">
+    
+    <link rel="canonical" href="https://syberfashion.com/" />
 
-    <link
-      href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap"
-      rel="stylesheet"
-    />
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="SyberFashion | The Future of Digital Tailoring">
+    <meta property="og:description" content="Step into the Syber Studio. High-resolution insights for the modern fashion creator.">
+    <meta property="og:image" content="/assets/editorial-preview.jpg"> <meta property="og:url" content="https://syberfashion.com/">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@syberfashion">
+    <meta name="twitter:title" content="SyberFashion | Digital Fashion Atelier">
+    <meta name="twitter:image" content="/assets/editorial-preview.jpg">
+
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#581845"> <link rel="icon" type="image/png" sizes="192x192" href="/icon/blog1.png">
+    <link rel="apple-touch-icon" sizes="512x512" href="/icon/blog2.png">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet" />
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "MagazinesAndNewspapers",
+        "name": "SyberFashion",
+        "alternateName": "Syber Atelier",
+        "description": "An editorial platform focusing on the technical and aesthetic evolution of fashion.",
+        "url": "https://syberfashion.com",
+        "logo": "https://syberfashion.com/icon/blog1.png",
+        "editor": {
+          "@type": "Person",
+          "name": "SyberTailor"
+        },
+        "genre": ["Fashion", "Technology", "Design"]
+      }
+    </script>
   </head>
-  <body>
+  
+  <body className="antialiased font-montserrat">
+    <a href="#root" class="sr-only focus:not-sr-only" style="position: absolute; left: -9999px;">Skip to main content</a>
+    
     <div id="root"></div>
-    <button id="install-button" style="display: none; position: fixed; bottom: 20px; right: 20px; padding: 10px; background-color:
-     #a61856; color: white; border: none; border-radius: 5px;">
-      Install App
+
+    <button id="install-button" 
+      style="display: none; position: fixed; bottom: 40px; right: 40px; padding: 15px 30px; 
+             background-color: #581845; color: #D6AE7B; border: 1px solid #D6AE7B; 
+             border-radius: 9999px; font-weight: 800; letter-spacing: 0.1em; 
+             cursor: pointer; box-shadow: 0 15px 30px rgba(88, 24, 69, 0.4); z-index: 1000;">
+      INSTALL SYBER APP
     </button>
-    <script type="module" src="src/main.jsx"></script>
+
+    <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>

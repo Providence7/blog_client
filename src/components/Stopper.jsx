@@ -1,47 +1,85 @@
+// src/components/Footer.jsx
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Facebook, Instagram, Twitter} from 'lucide-react'; // Import social media icons from Lucide
+import { Facebook, Instagram, Twitter, Mail, MapPin, Globe } from 'lucide-react';
 
 const Footer = () => {
+  const currentYear = new Date().getFullYear();
+
   return (
-    <footer className=" text-black border-black border-y-2 py-8 px-4 mt-8">
-      <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center">
-        {/* Company Info */}
-        <div className="text-center md:text-left mb-6 md:mb-0">
-          <h2 className="text-2xl font-semibold mb-4">
-            <span className="font-bold text-3xl text-[#c4458f]">S</span>yber
-            <span className="text-[#c4458f] font-bold text-2xl">Fashion</span>
-          </h2>
-          <p className="text-lg">SyberFashion | Empowering Fashion</p>
-          <p className="mt-2">Email: sybertailor@gmail.com.com</p>
-          <p>Contact Address: 127.0.0.1</p>
-        </div>
-
-        {/* Social Media Links */}
-        <div className="flex justify-center gap-6 mt-6 md:mt-0">
-          <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
-            <Facebook size={24} />
-          </a>
-          <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
-            <Instagram size={24} />
-          </a>
-          <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" aria-label="Twitter">
-            <Twitter size={24} />
-          </a>
+    <footer className="bg-[#1B1B1F] text-white pt-20 pb-10 px-6 mt-20 rounded-t-[3rem] md:rounded-t-[5rem]">
+      <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-12 md:gap-8">
         
+        {/* BRAND IDENTITY */}
+        <div className="flex flex-col items-center md:items-start space-y-6">
+          <Link to="/" className="group">
+            <div className="flex flex-col leading-tight">
+              <span className="text-white font-black text-3xl tracking-tighter group-hover:text-[#D6AE7B] transition-colors">
+                SYBER<span className="text-[#B76E79]">.</span>
+              </span>
+              <span className="text-[10px] font-bold tracking-[0.4em] text-[#B76E79] uppercase">
+                Fashion Studio
+              </span>
+            </div>
+          </Link>
+          <p className="text-sm text-white/50 italic max-w-[280px] text-center md:text-left leading-relaxed">
+            "Empowering the intersection of digital innovation and high-fashion tailoring."
+          </p>
+          <div className="flex gap-5">
+            {[
+              { Icon: Facebook, url: "https://facebook.com" },
+              { Icon: Instagram, url: "https://instagram.com" },
+              { Icon: Twitter, url: "https://twitter.com" }
+            ].map(({ Icon, url }, idx) => (
+              <a 
+                key={idx}
+                href={url} 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="p-3 bg-white/5 rounded-2xl text-[#D6AE7B] hover:bg-[#D6AE7B] hover:text-[#1B1B1F] transition-all duration-300"
+              >
+                <Icon size={20} />
+              </a>
+            ))}
+          </div>
         </div>
 
-        {/* Links to policies and important info */}
-        <div className="flex flex-col md:flex-row gap-6 mt-8 md:mt-0 text-sm">
-          <Link to="/privacy-policy" className="hover:text-[#c4458f]">Privacy Policy</Link>
-          <Link to="/terms-of-service" className="hover:text-[#c4458f]">Terms of Service</Link>
-          <Link to="/contact-us" className="hover:text-[#c4458f]">Contact Us</Link>
+        {/* CONTACT & ATELIER INFO */}
+        <div className="flex flex-col items-center md:items-start space-y-6">
+          <h3 className="text-[10px] font-bold uppercase tracking-[0.3em] text-[#B76E79]">Studio Details</h3>
+          <div className="space-y-4 text-sm font-medium">
+            <div className="flex items-center gap-3 text-white/70 hover:text-white transition-colors cursor-default">
+              <Mail size={16} className="text-[#D6AE7B]" />
+              <span>sybertailor@gmail.com</span>
+            </div>
+            <div className="flex items-center gap-3 text-white/70 hover:text-white transition-colors cursor-default">
+              <MapPin size={16} className="text-[#D6AE7B]" />
+              <span>Digital Archive 127.0.0.1</span>
+            </div>
+            <div className="flex items-center gap-3 text-white/70 hover:text-white transition-colors cursor-default">
+              <Globe size={16} className="text-[#D6AE7B]" />
+              <span>Global Presence</span>
+            </div>
+          </div>
+        </div>
+
+        {/* QUICK NAVIGATION */}
+        <div className="flex flex-col items-center md:items-start space-y-6">
+          <h3 className="text-[10px] font-bold uppercase tracking-[0.3em] text-[#B76E79]">Legal & Access</h3>
+          <nav className="flex flex-col items-center md:items-start gap-3">
+            <Link to="/privacy-policy" className="text-sm font-bold text-white/40 hover:text-[#D6AE7B] transition-colors uppercase tracking-widest">Privacy Policy</Link>
+            <Link to="/terms-of-service" className="text-sm font-bold text-white/40 hover:text-[#D6AE7B] transition-colors uppercase tracking-widest">Terms of Service</Link>
+            <Link to="/contact-us" className="text-sm font-bold text-white/40 hover:text-[#D6AE7B] transition-colors uppercase tracking-widest">Contact Us</Link>
+          </nav>
         </div>
       </div>
 
-      {/* Copyright and Legal Notice */}
-      <div className="mt-8 text-center text-sm">
-        <p>&copy; {new Date().getFullYear()} SyberFashion | All Rights Reserved.</p>
+      {/* COPYRIGHT SECTION */}
+      <div className="mt-20 pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-4 text-[10px] font-bold uppercase tracking-[0.2em] text-white/20">
+        <p>&copy; {currentYear} SyberFashion Studio</p>
+        <p className="flex items-center gap-2">
+          Made for <span className="text-[#B76E79]">High-Resolution</span> Lifestyles
+        </p>
       </div>
     </footer>
   );

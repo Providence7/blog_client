@@ -1,82 +1,102 @@
-import { Link, useSearchParams } from "react-router-dom";
+// src/components/SideMenu.jsx
+import { useSearchParams } from "react-router-dom";
 import Search from "./Search";
+import { Filter, Hash, SortAsc } from "lucide-react";
 
 const SideMenu = () => {
   const [searchParams, setSearchParams] = useSearchParams();
 
   const handleFilterChange = (e) => {
-    if (searchParams.get("sort") !== e.target.value) {
-      setSearchParams({
-        ...Object.fromEntries(searchParams.entries()),
-        sort: e.target.value,
-      });
-    }
-  };
-  const handleCategoryChange = (category) => {
-    if (searchParams.get("cat") !== category) {
-      setSearchParams({
-        ...Object.fromEntries(searchParams.entries()),
-        cat:category,
-      });
-    }
+    const newParams = Object.fromEntries(searchParams.entries());
+    newParams.sort = e.target.value;
+    setSearchParams(newParams);
   };
 
+  const handleCategoryChange = (category) => {
+    const newParams = Object.fromEntries(searchParams.entries());
+    if (category === "general") {
+      delete newParams.cat;
+    } else {
+      newParams.cat = category;
+    }
+    setSearchParams(newParams);
+  };
+
+  const currentSort = searchParams.get("sort") || "newest";
+  const currentCat = searchParams.get("cat") || "general";
+
+  const categories = [
+    { name: "All Insights", slug: "general" },
+    { name: "Technology", slug: "technology" },
+    { name: "Spotlight", slug: "spot" },
+    { name: "Tailoring", slug: "tailor" },
+    { name: "Trends", slug: "trend" },
+    { name: "Stories", slug: "story" },
+  ];
 
   return (
-    <div className="px-4 h-max sticky top-8">
-      <h1 className="mb-4 text-sm font-medium">Search</h1>
-      <Search />
-      <h1 className="mt-8 mb-4 text-sm font-medium">Filter</h1>
-      <div className="flex flex-col gap-2 text-sm">
-        <label htmlFor="" className="flex items-center gap-2 cursor-pointer">
-          <input
-            type="radio"
-            name="sort"
-            onChange={handleFilterChange}
-            value="newest"
-            className="appearance-none w-4 h-4 border-[1.5px] border-blue-800 cursor-pointer rounded-sm bg-white checked:bg-blue-800"
-          />
-          Newest
-        </label>
-        <label htmlFor="" className="flex items-center gap-2 cursor-pointer">
-          <input
-            type="radio"
-            name="sort"
-            onChange={handleFilterChange}
-            value="popular"
-            className="appearance-none w-4 h-4 border-[1.5px] border-blue-800 cursor-pointer rounded-sm bg-white checked:bg-blue-800"
-          />
-          Most Popular
-        </label>
-        <label htmlFor="" className="flex items-center gap-2 cursor-pointer">
-          <input
-            type="radio"
-            name="sort"
-            onChange={handleFilterChange}
-            value="trending"
-            className="appearance-none w-4 h-4 border-[1.5px] border-blue-800 cursor-pointer rounded-sm bg-white checked:bg-blue-800"
-          />
-          Trending
-        </label>
-        <label htmlFor="" className="flex items-center gap-2 cursor-pointer">
-          <input
-            type="radio"
-            name="sort"
-            onChange={handleFilterChange}
-            value="oldest"
-            className="appearance-none w-4 h-4 border-[1.5px] border-blue-800 cursor-pointer rounded-sm bg-white checked:bg-blue-800"
-          />
-          Oldest
-        </label>
+    <div className="px-6 py-8 h-max sticky top-24 bg-white rounded-[2.5rem] border border-[#B76E79]/10 shadow-xl shadow-[#581845]/5">
+      
+      {/* SEARCH SECTION */}
+      <div className="mb-10">
+        <h3 className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.3em] text-[#581845] mb-4">
+          <Hash size={14} className="text-[#D6AE7B]" /> Search Archives
+        </h3>
+        <Search />
       </div>
-      <h1 className="mt-8 mb-4 text-sm font-medium">Categories</h1>
-      <div className="flex flex-col gap-2 text-sm">
-        <span className="underline cursor-pointer" onClick={()=>handleCategoryChange("general")}>All</span>
-        <span className="underline cursor-pointer" onClick={()=>handleCategoryChange("technology")}>Technology</span>
-        <span className="underline cursor-pointer" onClick={()=>handleCategoryChange("spot")}>Spotlight</span>
-        <span className="underline cursor-pointer" onClick={()=>handleCategoryChange("tailor")}>Tailoring</span>
-        <span className="underline cursor-pointer" onClick={()=>handleCategoryChange("tread")}>Treads</span>
-        <span className="underline cursor-pointer" onClick={()=>handleCategoryChange("story")}>Stories</span>
+
+      {/* FILTER SECTION */}
+      <div className="mb-10">
+        <h3 className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.3em] text-[#581845] mb-5">
+          <SortAsc size={14} className="text-[#D6AE7B]" /> Sort By
+        </h3>
+        <div className="flex flex-col gap-4">
+          {["newest", "popular", "trending", "oldest"].map((option) => (
+            <label key={option} className="flex items-center gap-3 cursor-pointer group text-xs font-bold text-[#1B1B1F]/60 hover:text-[#581845] transition-all">
+              <div className="relative flex items-center justify-center">
+                <input
+                  type="radio"
+                  name="sort"
+                  value={option}
+                  checked={currentSort === option}
+                  onChange={handleFilterChange}
+                  className="appearance-none w-5 h-5 border-2 border-[#B76E79]/20 rounded-full checked:border-[#581845] transition-all cursor-pointer"
+                />
+                {currentSort === option && (
+                  <div className="absolute w-2.5 h-2.5 bg-[#D6AE7B] rounded-full animate-in zoom-in-50" />
+                )}
+              </div>
+              <span className="capitalize tracking-wider">{option}</span>
+            </label>
+          ))}
+        </div>
+      </div>
+
+      {/* CATEGORIES SECTION */}
+      <div>
+        <h3 className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.3em] text-[#581845] mb-5">
+          <Filter size={14} className="text-[#D6AE7B]" /> Categories
+        </h3>
+        <div className="flex flex-col gap-2">
+          {categories.map((cat) => (
+            <button
+              key={cat.slug}
+              onClick={() => handleCategoryChange(cat.slug)}
+              className={`text-left text-xs font-bold py-2 px-4 rounded-xl transition-all duration-300 transform hover:translate-x-1 ${
+                currentCat === cat.slug
+                  ? "bg-[#FAF9F6] text-[#D6AE7B] border-l-4 border-[#D6AE7B]"
+                  : "text-[#1B1B1F]/40 hover:text-[#581845]"
+              }`}
+            >
+              {cat.name}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* DECORATIVE FOOTER */}
+      <div className="mt-10 pt-6 border-t border-[#B76E79]/10 text-center">
+        <p className="text-[9px] font-bold text-[#B76E79]/30 uppercase tracking-[0.4em]">Syber Studio Curations</p>
       </div>
     </div>
   );

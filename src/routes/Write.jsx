@@ -1,11 +1,12 @@
+// src/pages/Write.jsx
 import "react-quill-new/dist/quill.snow.css";
 import ReactQuill from "react-quill-new";
 import { useMutation } from "@tanstack/react-query";
-import "../index.css";
 import axios from "axios";
 import { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import { IoImageOutline, IoVideocamOutline, IoAddCircleOutline } from "react-icons/io5";
 import Upload from "../components/Upload";
 
 const Write = () => {
@@ -18,183 +19,148 @@ const Write = () => {
   const quillRef = useRef();
   const navigate = useNavigate();
 
-  // Insert image at current cursor position
+  // Optimized Image Insertion
   useEffect(() => {
-    if (img && value !== "") {
+    if (img?.url) {
       const quill = quillRef.current?.getEditor();
       const range = quill?.getSelection(true);
-      if (quill && range) {
-        quill.insertEmbed(range.index, "image", img.url);
-        quill.setSelection(range.index + 1);
-      } else {
-        setValue((prev) => prev + `<p><img src="${img.url}" /></p>`);
-      }
+      quill.insertEmbed(range.index, "image", img.url);
+      quill.setSelection(range.index + 1);
     }
   }, [img]);
 
-  // Insert video at current cursor position
+  // Optimized Video Insertion
   useEffect(() => {
-    if (video && value !== "") {
+    if (video?.url) {
       const quill = quillRef.current?.getEditor();
       const range = quill?.getSelection(true);
-      if (quill && range) {
-        quill.insertEmbed(range.index, "video", video.url);
-        quill.setSelection(range.index + 1);
-      } else {
-        setValue((prev) => prev + `<p><iframe class="ql-video" src="${video.url}" /></p>`);
-      }
+      quill.insertEmbed(range.index, "video", video.url);
+      quill.setSelection(range.index + 1);
     }
   }, [video]);
 
-  // Insert random ad at random positions in the content
-  const insertRandomAd = () => {
-    const adPlaceholder = `<div class="ad-placeholder">[Ad - Insert Ad Here]</div>`;
-    const randomPosition = Math.floor(Math.random() * 5); // Random position
-    const newContent = value.split("<p>").map((para, index) => {
-      if (index === randomPosition) {
-        return `${adPlaceholder}${para}`;
-      }
-      return para;
-    }).join("<p>");
-    setValue(newContent);
-  };
-
   const mutation = useMutation({
     mutationFn: async (newPost) => {
-      return axios.post(`${import.meta.env.VITE_API_URL}/posts`, newPost, {
-        headers: { "Content-Type": "application/json" },
-      });
+      return axios.post(`${import.meta.env.VITE_API_URL}/posts`, newPost);
     },
     onSuccess: (res) => {
-      toast.success("Post has been created");
+      toast.success("Post published successfully!");
       navigate(`/${res.data.slug}`);
     },
   });
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-
-    if (isUploading) {
-      toast.error("Please wait until the upload is finished.");
-      return;
-    }
+    if (isUploading) return toast.warning("Upload in progress...");
 
     const formData = new FormData(e.target);
-    const imgPath = cover?.filePath || "";
     const data = {
-      title: formData.get("title") || "",
-      category: formData.get("category") || "",
-      desc: formData.get("desc") || "",
-      content: value || "",
-      img: imgPath,
+      title: formData.get("title"),
+      category: formData.get("category"),
+      desc: formData.get("desc"),
+      content: value,
+      img: cover?.filePath || "",
     };
 
-    if (!data.title || !data.category || !data.desc || !data.content) {
-      toast.error("All fields are required!");
-      return;
-    }
-
+    if (!data.title || !data.content) return toast.error("Title and Content are required!");
     mutation.mutate(data);
   };
 
   return (
-    <div className="h-[calc(100vh-64px)] md:h-[calc(100vh-80px)] flex flex-col gap-6">
-      <h1 className="text-cl font-light">Create a New Post</h1>
-      <form onSubmit={handleSubmit} className="flex flex-col gap-6 flex-1 mb-6">
-        <Upload type="image" setProgress={setProgress} setData={setCover} setIsUploading={setIsUploading}>
-          <button type="button" className="w-max p-2 shadow-md rounded-xl text-sm text-gray-500 bg-white">
-            Add a cover image
-          </button>
-        </Upload>
+    <div className="max-w-4xl mx-auto px-4 py-8 mb-24 transition-all duration-300">
+      <form onSubmit={handleSubmit} className="flex flex-col gap-8">
+        
+        {/* Cover Image Section */}
+        <div className="group relative w-full h-48 md:h-64 bg-gray-50 border-2 border-dashed border-gray-200 rounded-3xl overflow-hidden flex items-center justify-center">
+          {cover?.url ? (
+            <img src={cover.url} className="w-full h-full object-cover" alt="Cover" />
+          ) : (
+            <Upload type="image" setProgress={setProgress} setData={setCover} setIsUploading={setIsUploading}>
+              <div className="flex flex-col items-center cursor-pointer text-gray-400 group-hover:text-[#581845]">
+                <IoImageOutline size={40} />
+                <span className="text-sm font-medium mt-2">Add Cover Photo</span>
+              </div>
+            </Upload>
+          )}
+        </div>
+
+        {/* Title Input */}
         <input
-          className="text-4xl font-semibold bg-transparent outline-none"
-          type="text"
-          placeholder="My Awesome Story"
           name="title"
+          type="text"
+          placeholder="Enter Title..."
+          className="text-3xl md:text-5xl font-bold bg-transparent outline-none placeholder:text-gray-200 text-gray-800"
         />
-        <div className="flex items-center gap-4">
-          <label htmlFor="" className="text-sm">
-            Choose a category:
-          </label>
-          <select
-            name="category"
-            className="p-2 rounded-xl bg-white shadow-md"
-          >
+
+        {/* Category & Meta Section */}
+        <div className="flex flex-wrap items-center gap-4 py-4 border-y border-gray-100">
+          <select name="category" className="bg-gray-100 px-4 py-2 rounded-full text-sm font-semibold outline-none focus:ring-2 focus:ring-[#581845]/20">
             <option value="general">General</option>
             <option value="technology">Technology</option>
-            <option value="spotlight">Spotlight</option>
             <option value="tailor">Tailoring</option>
-            <option value="tread">Treads</option>
             <option value="story">Stories</option>
           </select>
+          <input 
+            name="desc"
+            placeholder="Short excerpt..."
+            className="flex-1 bg-transparent text-sm text-gray-500 outline-none"
+          />
         </div>
-        <textarea
-          className="p-4 rounded-xl bg-white shadow-md"
-          name="desc"
-          placeholder="A Short Description"
-        />
-        <div className="flex flex-1">
-          <div className="flex flex-col gap-2 mr-2">
+
+        {/* Editor Area */}
+        <div className="relative min-h-[400px]">
+          {/* Floating Media Bar */}
+          <div className="absolute -left-2 md:-left-12 top-0 flex flex-col gap-2 z-10">
             <Upload type="image" setProgress={setProgress} setData={setImg} setIsUploading={setIsUploading}>
-              <button type="button">🌆</button>
+              <button type="button" title="Insert Image" className="p-2 bg-white shadow-md rounded-full text-gray-500 hover:text-[#581845] transition-colors">
+                <IoImageOutline size={20} />
+              </button>
             </Upload>
             <Upload type="video" setProgress={setProgress} setData={setVideo} setIsUploading={setIsUploading}>
-              <button type="button">▶️</button>
+              <button type="button" title="Insert Video" className="p-2 bg-white shadow-md rounded-full text-gray-500 hover:text-[#581845] transition-colors">
+                <IoVideocamOutline size={20} />
+              </button>
             </Upload>
-            {/* Button to insert random ad */}
-            <button type="button" onClick={insertRandomAd} className="p-2 mt-4 text-sm text-gray-500 bg-white shadow-md">
-              Insert Random Ad
-            </button>
           </div>
+
           <ReactQuill
             ref={quillRef}
             theme="snow"
-            className="flex-1 rounded-xl bg-white shadow-md custom-quill"
             value={value}
             onChange={setValue}
-            readOnly={0 < progress && progress < 100}
+            placeholder="Tell your story..."
+            className="write-quill text-lg h-auto"
             modules={{
               toolbar: [
                 [{ header: [1, 2, false] }],
-                ["bold", "italic", "underline", "strike"],
+                ["bold", "italic", "underline", "strike", "blockquote"],
                 [{ list: "ordered" }, { list: "bullet" }],
-                ["blockquote", "code-block"],
-                [{ align: [] }],
-                [{ color: [] }, { background: [] }],
-                ["link", "image", "video"],
-                ["clean"],
+                ["link", "clean"],
               ],
-              clipboard: {
-                matchVisual: false,
-              },
             }}
-            formats={[
-              "header",
-              "bold",
-              "italic",
-              "underline",
-              "strike",
-              "list",
-              "bullet",
-              "blockquote",
-              "code-block",
-              "align",
-              "color",
-              "background",
-              "link",
-              "image",
-              "video",
-            ]}
           />
         </div>
-        <button
-          disabled={mutation.isPending || (0 < progress && progress < 100) || isUploading}
-          className="bg-blue-800 text-white font-medium rounded-xl mt-4 p-2 w-36 disabled:bg-blue-400 disabled:cursor-not-allowed"
-        >
-          {mutation.isPending ? "Loading..." : "Send"}
-        </button>
-        {"Progress:" + progress}
-        {mutation.isError && <span>{mutation.error.message}</span>}
+
+        {/* Footer Actions */}
+        <div className="fixed bottom-0 left-0 right-0 bg-white/80 backdrop-blur-md border-t border-gray-100 p-4 z-50">
+          <div className="max-w-4xl mx-auto flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="w-32 h-2 bg-gray-100 rounded-full overflow-hidden">
+                <div className="h-full bg-[#581845] transition-all" style={{ width: `${progress}%` }} />
+              </div>
+              <span className="text-[10px] font-bold text-gray-400 uppercase tracking-tighter">
+                {progress > 0 && progress < 100 ? `Uploading ${progress}%` : "Ready"}
+              </span>
+            </div>
+            
+            <button
+              disabled={mutation.isPending || isUploading}
+              className="bg-[#581845] text-white px-8 py-3 rounded-full font-bold shadow-lg shadow-[#581845]/20 hover:scale-105 active:scale-95 transition-all disabled:opacity-50"
+            >
+              {mutation.isPending ? "Publishing..." : "Publish Post"}
+            </button>
+          </div>
+        </div>
       </form>
     </div>
   );

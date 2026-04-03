@@ -1,61 +1,50 @@
+// src/components/CommentSection.jsx
 import { useState, useEffect } from "react";
 import { auth } from "../layout/console.js";
 import { GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut } from "firebase/auth";
 import { toast } from "react-toastify";
+import { Send, LogOut, MessageCircle, Sparkles } from "lucide-react";
 import axios from "axios";
+
 const CommentSection = ({ slug }) => {
   const [user, setUser] = useState(null);
   const [comment, setComment] = useState("");
   const [comments, setComments] = useState([]);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Check if user is logged in
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       setUser(currentUser);
     });
-
-    return () => unsubscribe(); // Cleanup subscription
+    return () => unsubscribe();
   }, []);
 
-  // Google login method
   const handleGoogleLogin = async () => {
     const provider = new GoogleAuthProvider();
     try {
       const result = await signInWithPopup(auth, provider);
       const user = result.user;
-  
       const userData = {
         googleId: user.uid,
         email: user.email,
         username: user.displayName,
       };
-  
-      setUser(userData);
-      toast.success(`Welcome ${user.displayName}`);
-  
-      // ✅ Send to backend
       await axios.post(`${import.meta.env.VITE_API_URL}/api/auth/user`, userData);
-  
-      window.location.reload();
+      toast.success(`Welcome to the circle, ${user.displayName}`);
     } catch (error) {
-      console.error("Google login error:", error);
-      toast.error("Failed to log in with Google");
+      toast.error("Authentication failed");
     }
   };
-  
 
-  // Handle Logout
- const handleLogout = async () => {
+  const handleLogout = async () => {
     try {
       await signOut(auth);
-      setUser(null);
-      toast.success("Logged out successfully");
+      toast.success("Signed out");
     } catch (error) {
-      console.error("Logout error:", error);
-      toast.error("Failed to log out");
+      toast.error("Logout error");
     }
   };
-  // Fetch Comments for the Post (by Slug)
+
   useEffect(() => {
     const fetchComments = async () => {
       try {
@@ -66,16 +55,14 @@ const CommentSection = ({ slug }) => {
         console.error("Error fetching comments:", error);
       }
     };
-
     fetchComments();
   }, [slug]);
 
-  // Submit Comment
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!comment.trim()) return;
 
-    if (!comment.trim()) return; // Prevent empty comments
-
+    setIsSubmitting(true);
     const commentData = {
       postId: slug,
       googleId: user.uid,
@@ -91,79 +78,102 @@ const CommentSection = ({ slug }) => {
         body: JSON.stringify(commentData),
       });
 
-      if (!res.ok) {
-        throw new Error("Error submitting comment");
-      }
+      if (!res.ok) throw new Error("Submission failed");
 
-      const newComment = await res.json();
-
-      // ✅ Fetch updated comments without reloading the page
-      setComments((prev) => [newComment.newComment, ...prev]);
-
-      setComment(""); // Clear input field
+      const data = await res.json();
+      setComments((prev) => [data.newComment, ...prev]);
+      setComment("");
+      toast.success("Insight shared");
     } catch (error) {
-      console.error(error.message);
+      toast.error("Could not post comment");
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
   return (
-    <div className="max-w-2xl mx-auto p-6 bg-white shadow-md rounded-lg">
-      {user ? (
-        <>
-          <div className="flex justify-between items-center mb-4">
-            <p className="text-lg font-semibold text-[#46249c]">
-              Welcome, {user.displayName}!
-            </p>
+    <div className="max-w-3xl mx-auto my-12">
+      <div className="flex items-center gap-3 mb-8">
+        <div className="p-2 bg-[#581845] text-white rounded-xl shadow-lg shadow-[#581845]/20">
+          <MessageCircle size={20} />
+        </div>
+        <h3 className="text-2xl font-bold text-[#1B1B1F]">Conversations</h3>
+        <div className="flex-1 h-[1px] bg-[#B76E79]/20" />
+      </div>
+
+      <div className="bg-white border border-[#B76E79]/10 rounded-[2.5rem] p-6 md:p-8 shadow-xl shadow-[#581845]/5">
+        {user ? (
+          <div className="space-y-6">
+            <div className="flex items-center justify-between bg-[#FAF9F6] p-4 rounded-2xl border border-[#B76E79]/5">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 bg-[#D6AE7B] rounded-xl flex items-center justify-center font-bold text-[#1B1B1F]">
+                  {user.displayName?.charAt(0)}
+                </div>
+                <p className="text-sm font-bold text-[#1B1B1F]">
+                  {user.displayName}
+                </p>
+              </div>
+              <button onClick={handleLogout} className="text-[#B76E79] hover:text-red-500 transition-colors">
+                <LogOut size={18} />
+              </button>
+            </div>
+
+            <div className="relative">
+              <textarea
+                value={comment}
+                onChange={(e) => setComment(e.target.value)}
+                placeholder="Add to the discussion..."
+                className="w-full min-h-[120px] bg-[#FAF9F6] border-none rounded-2xl p-5 text-sm outline-none focus:ring-2 focus:ring-[#D6AE7B] transition-all resize-none text-[#1B1B1F]"
+              />
+              <button
+                onClick={handleSubmit}
+                disabled={isSubmitting || !comment.trim()}
+                className="absolute bottom-4 right-4 bg-[#581845] text-white p-3 rounded-xl hover:bg-[#1B1B1F] transition-all disabled:opacity-50 active:scale-95 shadow-lg shadow-[#581845]/20"
+              >
+                {isSubmitting ? <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" /> : <Send size={18} />}
+              </button>
+            </div>
+          </div>
+        ) : (
+          <div className="text-center py-8">
+            <Sparkles className="mx-auto text-[#D6AE7B] mb-4" size={32} />
+            <p className="text-[#B76E79] font-medium mb-6">Join the inner circle to share your insights.</p>
             <button
-              onClick={handleLogout}
-              className="bg-[#c4458f] text-white px-4 py-2 rounded-md hover:bg-[#a43272] transition"
+              onClick={handleGoogleLogin}
+              className="bg-[#581845] text-white px-8 py-4 rounded-2xl font-bold hover:bg-[#1B1B1F] transition-all shadow-lg active:scale-95"
             >
-              Logout
+              Authenticate with Google
             </button>
           </div>
-          <textarea
-            value={comment}
-            onChange={(e) => setComment(e.target.value)}
-            placeholder="Write your comment..."
-            className="w-full border border-gray-300 rounded-lg p-3 mb-3 shadow-sm focus:outline-none focus:ring-2 focus:ring-[#46249c]"
-          />
-          <button
-            onClick={handleSubmit}
-            className="w-full bg-[#46249c] text-white py-2 rounded-lg hover:bg-[#351a76] transition"
-          >
-            Submit Comment
-          </button>
-        </>
-      ) : (
-        <button
-          onClick={handleGoogleLogin}
-          className="w-full bg-[#c4458f] text-white py-2 rounded-lg hover:bg-[#a43272] transition"
-        >
-          Login with Google to comment
-        </button>
-      )}
-
-      <div className="mt-6 w-fit space-y-6">
-        {comments.length > 0 ? (
-          comments.map((c, index) => (
-            <div
-              key={c._id || `${c.googleId}-${c.postId}`}
-              className={`rounded-lg shadow-md ${
-                index % 2 === 0 ? "bg-gray-100" : "bg-gray-50"
-              }`}
-            >
-          
-            <p className="font-bold italic text-[#c4458f]">{(c.username || c.name)?.toUpperCase()}
-            </p>
-        
-             <p className="text-[#46249c]">
-  {c.comment.charAt(0).toUpperCase() + c.comment.slice(1)}
-</p>
-            </div>
-          ))
-        ) : (
-          <p className="text-gray-500 text-center mt-4">No comments yet.</p>
         )}
+
+        {/* COMMENTS FEED */}
+        <div className="mt-12 space-y-8">
+          {comments.length > 0 ? (
+            comments.map((c, index) => (
+              <div key={c._id || index} className="group relative pl-6">
+                {/* Visual Connector Line */}
+                <div className="absolute left-0 top-0 bottom-0 w-[2px] bg-gradient-to-b from-[#D6AE7B] to-transparent rounded-full" />
+                
+                <div className="flex flex-col gap-2">
+                  <div className="flex items-center gap-2">
+                    <span className="text-[10px] uppercase tracking-widest font-bold text-[#581845]">
+                      {c.username || c.name}
+                    </span>
+                    <span className="text-[10px] text-[#B76E79]/60">• JUST NOW</span>
+                  </div>
+                  <p className="text-[#1B1B1F] leading-relaxed text-sm md:text-base">
+                    {c.comment.charAt(0).toUpperCase() + c.comment.slice(1)}
+                  </p>
+                </div>
+              </div>
+            ))
+          ) : (
+            <div className="text-center py-10 opacity-40">
+              <p className="text-sm font-medium uppercase tracking-widest">No conversations yet</p>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

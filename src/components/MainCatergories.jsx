@@ -1,52 +1,57 @@
-import { Link } from "react-router-dom";
+// src/components/MainCategories.jsx
+import { Link, useLocation } from "react-router-dom";
 import Search from "./Search";
 
 const MainCategories = () => {
+  const location = useLocation();
+  const query = new URLSearchParams(location.search);
+  const currentCat = query.get("cat");
+
+  const categories = [
+    { name: "Technology", slug: "technology" },
+    { name: "Spotlights", slug: "spot" },
+    { name: "Tailoring", slug: "tailor" },
+    { name: "Trends", slug: "trend" },
+    { name: "Stories", slug: "story" },
+  ];
+
   return (
-    <div className="md:flex bg-white md:font-semibold md:text-base font-normal text-xs rounded-3xl xl:rounded-full p-3 shadow-lg items-center justify-center gap-8">
-      {/* links */}
-      <div className="flex-1 flex items-center justify-between flex-wrap">
+    <div className="md:flex bg-white rounded-[2rem] xl:rounded-full p-2 pl-4 shadow-xl shadow-[#581845]/5 items-center justify-between gap-6 border border-[#B76E79]/10">
+      
+      {/* Navigation Links */}
+      <div className="flex-1 flex items-center justify-start flex-wrap gap-1 md:gap-2">
         <Link
           to="/posts"
-          className="bg-blue-800 text-white rounded-full px-4 py-2"
+          className={`text-[11px] md:text-xs font-bold uppercase tracking-widest px-6 py-2.5 rounded-full transition-all duration-300 ${
+            !currentCat 
+              ? "bg-[#581845] text-white shadow-lg shadow-[#581845]/20" 
+              : "text-[#1B1B1F] hover:bg-[#FAF9F6]"
+          }`}
         >
-          All Posts
+          All Insights
         </Link>
-        <Link
-          to="/posts?cat=technology"
-          className="hover:bg-blue-50 rounded-full px-4 py-2"
-        >
-          Technology
-        </Link>
-        <Link
-          to="/posts?cat=spot"
-          className="hover:bg-blue-50 rounded-full px-4 py-2"
-        >
-          Spotlights
-        </Link>
-        <Link
-          to="/posts?cat=tailor"
-          className="hover:bg-blue-50 rounded-full px-4 py-2"
-        >
-        Tailoring
-        </Link>
-        <Link
-          to="/posts?cat=trend"
-          className="hover:bg-blue-50 rounded-full px-4 py-2"
-        >
-          Trends
-        </Link>
-        <Link
-          to="/posts?cat=story"
-          className="hover:bg-blue-50 rounded-full px-4 py-2"
-        >
-          Stories
-        </Link>
+
+        {categories.map((cat) => (
+          <Link
+            key={cat.slug}
+            to={`/posts?cat=${cat.slug}`}
+            className={`text-[11px] md:text-xs font-bold uppercase tracking-widest px-5 py-2.5 rounded-full transition-all duration-300 ${
+              currentCat === cat.slug
+                ? "bg-[#D6AE7B] text-[#1B1B1F] shadow-lg shadow-[#D6AE7B]/20"
+                : "text-[#B76E79] hover:bg-[#FAF9F6] hover:text-[#581845]"
+            }`}
+          >
+            {cat.name}
+          </Link>
+        ))}
       </div>
-      <span className="text-xl font-medium md:flex hidden">|</span>
-      {/* search */}
-      <div className="md:flex hidden">
-      <Search/>
+
+      {/* Desktop Divider & Search */}
+      <div className="hidden md:flex items-center gap-6 pr-2">
+        <div className="w-[1px] h-6 bg-[#B76E79]/20" />
+        <div className="min-w-[240px]">
+          <Search />
+        </div>
       </div>
     </div>
   );
