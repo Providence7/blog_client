@@ -74,7 +74,7 @@ const AboutFashionEra = () => {
             Whether you're looking for the latest style inspirations or deep technical insights, AttireByte has you covered.
           </p>
           <button className="bg-[#581845] hover:bg-white hover:text-[#581845] px-6 md:px-8 py-2.5 md:py-3 rounded-full font-bold text-sm md:text-base transition-all active:scale-95">
-            Explore the Feed
+            Explore the Feed.
           </button>
         </div>
 
