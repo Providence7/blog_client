@@ -9,7 +9,6 @@ const Navbar = () => {
 
   const navLinks = [
     { name: "Home", path: "/" },
-    { name: "Syber-Forum", path: "/forum" },
     { name: "Most Popular", path: "/posts?sort=popular" },
     { name: "About", path: "/about" },
   ];
@@ -23,7 +22,7 @@ const Navbar = () => {
         <Link to="/" className="group transition-transform active:scale-95">
           <div className="flex flex-col leading-tight">
             <span className="text-[#581845] font-black text-2xl tracking-tighter">
-              SYBER<span className="text-[#D6AE7B]">.</span>
+              ATTIRE<span className="text-[#D6AE7B]">.</span>
             </span>
             <span className="text-[10px] font-bold tracking-[0.4em] text-[#B76E79] uppercase">
               Fashion Studio
@@ -90,13 +89,7 @@ const Navbar = () => {
           <div className="h-6 w-[1px] bg-[#B76E79]/20" />
 
           {/* QUICK ACTIONS */}
-          <Link 
-            to="/login" 
-            className="flex items-center gap-2 bg-[#581845] text-white px-5 py-2.5 rounded-full text-[10px] font-bold uppercase tracking-widest hover:bg-[#B76E79] transition-all shadow-lg shadow-[#581845]/20 active:scale-95"
-          >
-            <User size={14} />
-            Studio Access
-          </Link>
+        
         </div>
       </nav>
 

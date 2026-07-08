@@ -15,7 +15,7 @@ const Footer = () => {
           <Link to="/" className="group">
             <div className="flex flex-col leading-tight">
               <span className="text-white font-black text-3xl tracking-tighter group-hover:text-[#D6AE7B] transition-colors">
-                SYBER<span className="text-[#B76E79]">.</span>
+                ATTIRE<span className="text-[#B76E79]">.</span>
               </span>
               <span className="text-[10px] font-bold tracking-[0.4em] text-[#B76E79] uppercase">
                 Fashion Studio
@@ -76,7 +76,7 @@ const Footer = () => {
 
       {/* COPYRIGHT SECTION */}
       <div className="mt-20 pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-4 text-[10px] font-bold uppercase tracking-[0.2em] text-white/20">
-        <p>&copy; {currentYear} SyberFashion Studio</p>
+        <p>&copy; {currentYear} Attirebyte Studio</p>
         <p className="flex items-center gap-2">
           Made for <span className="text-[#B76E79]">High-Resolution</span> Lifestyles
         </p>

@@ -134,7 +134,7 @@ const ManagePosts = () => {
 
       {/* FOOTER STATS */}
       <div className="mt-6 flex justify-between px-8 text-[10px] font-bold uppercase tracking-widest text-[#B76E79]">
-        <span>Syber Content Management</span>
+        <span>Attire Content Management</span>
         <span>Total Articles: {data.length}</span>
       </div>
     </div>

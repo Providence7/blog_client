@@ -17,15 +17,11 @@ import Write from "./routes/Write.jsx";
 import Homepage from "./routes/Homepage.jsx";
 import Mainlayout from "./layout/Mainlayout.jsx";
 import Dashboard from "./components/Dashboard.jsx";
-import UsersList from "./components/Users.jsx";
 import AdminLogin from "./routes/Login.jsx";
 import AdminRegister from "./routes/Register.jsx";
 import AdminLayout from "./routes/AdminLayout.jsx";
 import ManagePosts from "./components/ManagePost.jsx";
-import CommentTable from "./components/CommentTable.jsx";
-import ForumMan from "./components/ForumManage.jsx"
 import Edit from "./components/Edit.jsx";
-import Forum from "./routes/Forum.jsx";
 
 const queryClient = new QueryClient();
 
@@ -40,7 +36,6 @@ const router = createBrowserRouter([
       { path: "/login", element: <AdminLogin /> },
       { path: "/register", element: <AdminRegister /> },
       { path: "/:slug", element: <SinglePost /> },
-      { path: "/forum", element: <Forum /> },
     ],
   },
 
@@ -56,9 +51,6 @@ const router = createBrowserRouter([
           { path: "write", element: <Write /> },
           { path: "manage", element: <ManagePosts /> },
           { path: "edit/:slug", element: <Edit /> },
-          { path: "users", element: <UsersList /> },
-          { path: "comments", element: <CommentTable /> },
-          { path: "forum", element: <ForumMan /> },
         ],
       },
     ],

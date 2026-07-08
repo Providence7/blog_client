@@ -23,16 +23,22 @@ const authenticator = async () => {
   }
 };
 
-const Upload = ({ children, type, setProgress, setData }) => {
+const Upload = ({ children, type, setProgress, setData, setIsUploading }) => {
   const ref = useRef(null);
 
+  const onUploadStart = () => {
+    setIsUploading?.(true);
+    setProgress?.(0);
+  };
   const onError = (err) => {
     console.log(err);
     toast.error("Image upload failed!");
+    setIsUploading?.(false);
   };
   const onSuccess = (res) => {
     console.log(res);
     setData(res);
+    setIsUploading?.(false);
   };
   const onUploadProgress = (progress) => {
     console.log(progress);
@@ -47,6 +53,7 @@ const Upload = ({ children, type, setProgress, setData }) => {
     >
       <IKUpload
         useUniqueFileName
+        onUploadStart={onUploadStart}
         onError={onError}
         onSuccess={onSuccess}
         onUploadProgress={onUploadProgress}

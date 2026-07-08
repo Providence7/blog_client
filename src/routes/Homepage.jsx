@@ -15,9 +15,7 @@ const Homepage = () => {
             Home
           </Link>
           <span className="text-[#D6AE7B]">•</span>
-          <Link to="/forum" className="text-[#581845] border-b-2 border-[#581845]">
-            Syber Forum
-          </Link>
+        
           <span className="hidden md:inline text-[#D6AE7B]">•</span>
           <span className="hidden md:inline text-[#B76E79] opacity-60">Latest Discussions</span>
         </nav>
@@ -47,7 +45,7 @@ const Homepage = () => {
                 <Flame size={20} />
               </div>
               <div>
-                <h1 className="text-2xl font-bold text-[#1B1B1F]">The Syber Feed</h1>
+                <h1 className="text-2xl font-bold text-[#1B1B1F]">The Attire Feed</h1>
                 <p className="text-xs text-[#B76E79] font-medium uppercase tracking-wide">Updated just now</p>
               </div>
             </div>
@@ -57,9 +55,6 @@ const Homepage = () => {
               <button className="flex items-center gap-2 px-4 py-2 bg-white rounded-full text-xs font-bold text-[#581845] border border-[#581845]/10 shadow-sm transition-all hover:bg-[#581845] hover:text-white">
                 <Clock size={14} /> Newest
               </button>
-              <Link to="/write" className="px-6 py-2 bg-[#D6AE7B] text-[#1B1B1F] rounded-full text-xs font-bold shadow-md hover:bg-[#1B1B1F] hover:text-white transition-all">
-                Create Post
-              </Link>
             </div>
           </div>
 

@@ -9,7 +9,7 @@ const AboutFashionEra = () => {
         {/* Header Section */}
         <div className="text-center mb-16">
           <h1 className="text-5xl md:text-6xl font-bold text-[#1B1B1F] mb-6 tracking-tight">
-            About <span className="text-[#581845]">Syber</span>Fashion
+            About <span className="text-[#581845]">Attire</span>Byte
           </h1>
           <div className="w-24 h-1.5 bg-[#D6AE7B] mx-auto rounded-full mb-8" />
           <p className="text-[#B76E79] text-xl md:text-2xl font-medium max-w-2xl mx-auto leading-relaxed">
@@ -21,7 +21,7 @@ const AboutFashionEra = () => {
         <div className="grid md:grid-cols-2 gap-12 items-center mb-20">
           <div className="space-y-6 text-[#1B1B1F]/80 leading-relaxed text-lg">
             <p>
-              At <span className="text-[#581845] font-bold">SyberFashion</span>, we explore the ever-evolving world of style, from timeless sartorial classics to the cutting-edge trends defining the digital age. 
+              At <span className="text-[#581845] font-bold">AttitrByte</span>, we explore the ever-evolving world of style, from timeless sartorial classics to the cutting-edge trends defining the digital age. 
             </p>
             <p>
               Our platform serves as a bridge, connecting visionary designers, passionate enthusiasts, and the technology-driven advancements reshaping the global industry.
@@ -71,7 +71,7 @@ const AboutFashionEra = () => {
         <div className="text-center bg-[#1B1B1F] p-10 rounded-[3rem] text-white">
           <h2 className="text-2xl font-bold mb-4 text-[#D6AE7B]">Join the Evolution</h2>
           <p className="max-w-lg mx-auto opacity-80 mb-6 text-sm md:text-base">
-            Whether you're looking for the latest style inspirations or deep technical insights, SyberFashion has you covered.
+            Whether you're looking for the latest style inspirations or deep technical insights, AttireByte has you covered.
           </p>
           <button className="bg-[#581845] hover:bg-white hover:text-[#581845] px-8 py-3 rounded-full font-bold transition-all active:scale-95">
             Explore the Feed

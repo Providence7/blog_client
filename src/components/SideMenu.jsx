@@ -96,7 +96,7 @@ const SideMenu = () => {
 
       {/* DECORATIVE FOOTER */}
       <div className="mt-10 pt-6 border-t border-[#B76E79]/10 text-center">
-        <p className="text-[9px] font-bold text-[#B76E79]/30 uppercase tracking-[0.4em]">Syber Studio Curations</p>
+        <p className="text-[9px] font-bold text-[#B76E79]/30 uppercase tracking-[0.4em]">Attire Studio Curations</p>
       </div>
     </div>
   );
