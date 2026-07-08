@@ -1,80 +1,108 @@
 // src/pages/Homepage.jsx
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import MainCategories from "../components/MainCatergories";
 import PostList from "../components/PostList";
 import Search from "../components/Search";
-import { LayoutGrid, Flame, Clock } from "lucide-react";
+import { LayoutGrid, Flame, Clock, TrendingUp, PenLine } from "lucide-react";
+
+const SORTS = [
+  { key: "newest", label: "Newest", icon: Clock },
+  { key: "popular", label: "Popular", icon: Flame },
+  { key: "trending", label: "Trending", icon: TrendingUp },
+];
 
 const Homepage = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const activeSort = searchParams.get("sort") || "newest";
+
+  const handleSort = (key) => {
+    const params = new URLSearchParams(searchParams);
+    if (key === "newest") {
+      params.delete("sort");
+    } else {
+      params.set("sort", key);
+    }
+    setSearchParams(params);
+  };
+
   return (
     <div className="bg-[#FAF9F6] min-h-screen pb-20">
-      {/* 1. TOP NAVIGATION / BREADCRUMB */}
-      <div className="max-w-7xl mx-auto px-4 py-6">
-        <nav className="flex items-center gap-3 text-[10px] md:text-xs font-bold uppercase tracking-widest mb-8">
-          <Link to="/" className="text-[#1B1B1F] hover:text-[#581845] transition-colors">
-            Home
-          </Link>
-          <span className="text-[#D6AE7B]">•</span>
-        
-          <span className="hidden md:inline text-[#D6AE7B]">•</span>
-          <span className="hidden md:inline text-[#B76E79] opacity-60">Latest Discussions</span>
-        </nav>
+      <div className="max-w-7xl mx-auto px-4">
+        {/* MASTHEAD */}
+        <div className="text-center max-w-2xl mx-auto pt-10 md:pt-16 pb-10 md:pb-14">
+          <span className="text-[10px] font-bold uppercase tracking-[0.3em] text-[#B76E79]">
+            The Attirebyte Journal
+          </span>
+          <h1
+            className="text-4xl md:text-6xl font-bold text-[#1B1B1F] leading-[1.1] mt-4"
+            style={{ fontFamily: "Georgia, serif" }}
+          >
+            Stories in <span className="text-[#581845]">Stitches</span>
+          </h1>
+          <p className="text-[#1B1B1F]/55 text-base md:text-lg leading-relaxed mt-4">
+            Craft notes, style guides, and dispatches from the world of bespoke tailoring.
+          </p>
+        </div>
 
-        {/* 2. FUNCTIONAL SECTION (Categories & Search) */}
-        <div className="flex flex-col gap-6">
-          <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 border-b border-[#B76E79]/10 pb-8">
-            <div className="flex-1 overflow-hidden">
-              <div className="flex items-center gap-2 mb-4 text-[#581845]">
-                <LayoutGrid size={16} />
-                <span className="text-xs font-bold uppercase tracking-tighter">Explore Topics</span>
-              </div>
-              <MainCategories />
+        {/* CATEGORIES & SEARCH */}
+        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 border-y border-[#B76E79]/10 py-8">
+          <div className="flex-1 overflow-hidden">
+            <div className="flex items-center gap-2 mb-4 text-[#581845]">
+              <LayoutGrid size={16} />
+              <span className="text-xs font-bold uppercase tracking-widest">Explore Topics</span>
             </div>
-            
-            <div className="w-full lg:w-80">
-              <div className="bg-white rounded-2xl shadow-sm p-1 border border-[#B76E79]/5">
-                <Search />
-              </div>
-            </div>
+            <MainCategories />
           </div>
 
-          {/* 3. FEED HEADER */}
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mt-4">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-[#581845] rounded-xl flex items-center justify-center text-white shadow-lg shadow-[#581845]/20">
-                <Flame size={20} />
-              </div>
-              <div>
-                <h1 className="text-2xl font-bold text-[#1B1B1F]">The Attire Feed</h1>
-                <p className="text-xs text-[#B76E79] font-medium uppercase tracking-wide">Updated just now</p>
-              </div>
+          <div className="w-full lg:w-80 shrink-0">
+            <div className="bg-white rounded-2xl border border-[#B76E79]/10 p-1">
+              <Search />
             </div>
+          </div>
+        </div>
 
-            {/* Quick Filter Tags (Desktop Only) */}
-            <div className="hidden md:flex items-center gap-2">
-              <button className="flex items-center gap-2 px-4 py-2 bg-white rounded-full text-xs font-bold text-[#581845] border border-[#581845]/10 shadow-sm transition-all hover:bg-[#581845] hover:text-white">
-                <Clock size={14} /> Newest
+        {/* FEED HEADER + SORT */}
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mt-10">
+          <div>
+            <h2 className="text-2xl font-bold text-[#1B1B1F]" style={{ fontFamily: "Georgia, serif" }}>
+              Latest Stories
+            </h2>
+            <div className="w-14 h-0.5 bg-[#D6AE7B] rounded-full mt-2" />
+          </div>
+
+          <div className="flex items-center gap-2 overflow-x-auto">
+            {SORTS.map(({ key, label, icon: Icon }) => (
+              <button
+                key={key}
+                onClick={() => handleSort(key)}
+                className={`flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-bold whitespace-nowrap transition-all border ${
+                  activeSort === key
+                    ? "bg-[#581845] text-white border-[#581845]"
+                    : "bg-white text-[#1B1B1F]/60 border-[#B76E79]/15 hover:border-[#581845]/40 hover:text-[#581845]"
+                }`}
+              >
+                <Icon size={13} /> {label}
               </button>
-            </div>
+            ))}
           </div>
+        </div>
 
-          {/* 4. THE POST LIST */}
-          <div className="mt-6 md:mt-10">
-            {/* Boxed on Mobile, Clean on Desktop */}
-            <div className="bg-white md:bg-transparent p-4 md:p-0 rounded-[2rem] md:rounded-none shadow-sm md:shadow-none border border-[#B76E79]/5 md:border-none">
-               <PostList />
-            </div>
+        {/* POST LIST */}
+        <div className="mt-8">
+          <div className="bg-white md:bg-transparent p-4 md:p-0 rounded-[2rem] md:rounded-none border border-[#B76E79]/10 md:border-none">
+            <PostList />
           </div>
+        </div>
 
-          {/* 5. MOBILE BOTTOM NAV (Floating 'Write' Button) */}
-          <div className="md:hidden fixed bottom-6 right-6 z-50">
-            <Link 
-              to="/write" 
-              className="w-14 h-14 bg-[#581845] text-white flex items-center justify-center rounded-2xl shadow-2xl active:scale-90 transition-transform"
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-            </Link>
-          </div>
+        {/* MOBILE FLOATING WRITE BUTTON */}
+        <div className="md:hidden fixed bottom-6 right-6 z-50">
+          <Link
+            to="/write"
+            className="w-14 h-14 bg-[#581845] text-white flex items-center justify-center rounded-2xl shadow-xl active:scale-90 transition-transform"
+            aria-label="Write a new story"
+          >
+            <PenLine size={22} />
+          </Link>
         </div>
       </div>
     </div>
