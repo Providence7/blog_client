@@ -29,19 +29,10 @@ const Homepage = () => {
     <div className="bg-[#FAF9F6] min-h-screen pb-20">
       <div className="max-w-7xl mx-auto px-4">
         {/* MASTHEAD */}
-        <div className="text-center max-w-2xl mx-auto pt-10 md:pt-16 pb-10 md:pb-14">
+        <div className="text-center max-w-2xl mx-auto pt-2 md:pt-2 pb-2 md:pb-4">
           <span className="text-[10px] font-bold uppercase tracking-[0.3em] text-[#B76E79]">
             The Attirebyte Journal
           </span>
-          <h1
-            className="text-4xl md:text-6xl font-bold text-[#1B1B1F] leading-[1.1] mt-4"
-            style={{ fontFamily: "Georgia, serif" }}
-          >
-            Stories in <span className="text-[#581845]">Stitches</span>
-          </h1>
-          <p className="text-[#1B1B1F]/55 text-base md:text-lg leading-relaxed mt-4">
-            Craft notes, style guides, and dispatches from the world of bespoke tailoring.
-          </p>
         </div>
 
         {/* CATEGORIES & SEARCH */}
@@ -54,14 +45,9 @@ const Homepage = () => {
             <MainCategories />
           </div>
 
-          <div className="w-full lg:w-80 shrink-0">
-            <div className="bg-white rounded-2xl border border-[#B76E79]/10 p-1">
-              <Search />
-            </div>
-          </div>
         </div>
 
-        {/* FEED HEADER + SORT */}
+        {/* FEED HEADER + SORT + WRITE */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mt-10">
           <div>
             <h2 className="text-2xl font-bold text-[#1B1B1F]" style={{ fontFamily: "Georgia, serif" }}>
@@ -70,20 +56,24 @@ const Homepage = () => {
             <div className="w-14 h-0.5 bg-[#D6AE7B] rounded-full mt-2" />
           </div>
 
-          <div className="flex items-center gap-2 overflow-x-auto">
-            {SORTS.map(({ key, label, icon: Icon }) => (
-              <button
-                key={key}
-                onClick={() => handleSort(key)}
-                className={`flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-bold whitespace-nowrap transition-all border ${
-                  activeSort === key
-                    ? "bg-[#581845] text-white border-[#581845]"
-                    : "bg-white text-[#1B1B1F]/60 border-[#B76E79]/15 hover:border-[#581845]/40 hover:text-[#581845]"
-                }`}
-              >
-                <Icon size={13} /> {label}
-              </button>
-            ))}
+          <div className="flex items-center justify-between md:justify-end gap-2">
+            <div className="flex items-center gap-2 overflow-x-auto">
+              {SORTS.map(({ key, label, icon: Icon }) => (
+                <button
+                  key={key}
+                  onClick={() => handleSort(key)}
+                  className={`flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-bold whitespace-nowrap transition-all border ${
+                    activeSort === key
+                      ? "bg-[#581845] text-white border-[#581845]"
+                      : "bg-white text-[#1B1B1F]/60 border-[#B76E79]/15 hover:border-[#581845]/40 hover:text-[#581845]"
+                  }`}
+                >
+                  <Icon size={13} /> {label}
+                </button>
+              ))}
+            </div>
+
+          
           </div>
         </div>
 
@@ -92,17 +82,6 @@ const Homepage = () => {
           <div className="bg-white md:bg-transparent p-4 md:p-0 rounded-[2rem] md:rounded-none border border-[#B76E79]/10 md:border-none">
             <PostList />
           </div>
-        </div>
-
-        {/* MOBILE FLOATING WRITE BUTTON */}
-        <div className="md:hidden fixed bottom-6 right-6 z-50">
-          <Link
-            to="/write"
-            className="w-14 h-14 bg-[#581845] text-white flex items-center justify-center rounded-2xl shadow-xl active:scale-90 transition-transform"
-            aria-label="Write a new story"
-          >
-            <PenLine size={22} />
-          </Link>
         </div>
       </div>
     </div>

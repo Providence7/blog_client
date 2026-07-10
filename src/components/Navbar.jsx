@@ -1,7 +1,7 @@
 // src/components/Navbar.jsx
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Menu, X, Globe, User } from "lucide-react";
+import { Menu, X, Globe } from "lucide-react";
 
 const Navbar = () => {
   const [open, setOpen] = useState(false);
@@ -14,6 +14,19 @@ const Navbar = () => {
   ];
 
   const isActive = (path) => location.pathname === path;
+
+  // Lock body scroll while the mobile menu is open
+  useEffect(() => {
+    document.body.style.overflow = open ? "hidden" : "";
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [open]);
+
+  // Close the menu on route change
+  useEffect(() => {
+    setOpen(false);
+  }, [location.pathname, location.search]);
 
   return (
     <>
@@ -31,41 +44,14 @@ const Navbar = () => {
         </Link>
 
         {/* MOBILE TOGGLE */}
-        <div className="md:hidden">
-          <button
-            className="p-2 text-[#581845] hover:bg-[#FAF9F6] rounded-xl transition-colors"
-            onClick={() => setOpen(!open)}
-          >
-            {open ? <X size={28} /> : <Menu size={28} />}
-          </button>
-
-          {/* MOBILE OVERLAY */}
-          <div 
-            className={`fixed inset-0 bg-[#1B1B1F]/90 backdrop-blur-2xl flex flex-col items-center justify-center space-y-8 z-[101] transition-all duration-500 ${
-              open ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-full pointer-events-none"
-            }`}
-          >
-            <button
-              className="absolute top-8 right-8 text-[#D6AE7B]"
-              onClick={() => setOpen(false)}
-            >
-              <X size={36} />
-            </button>
-            {navLinks.map((link) => (
-              <Link
-                key={link.name}
-                to={link.path}
-                className="text-2xl font-bold text-white hover:text-[#D6AE7B] transition-colors uppercase tracking-widest"
-                onClick={() => setOpen(false)}
-              >
-                {link.name}
-              </Link>
-            ))}
-            <div className="pt-10 border-t border-white/10 w-20 flex justify-center text-[#D6AE7B]">
-              <Globe size={24} />
-            </div>
-          </div>
-        </div>
+        <button
+          className="md:hidden p-2 text-[#581845] hover:bg-[#FAF9F6] rounded-xl transition-colors"
+          onClick={() => setOpen(!open)}
+          aria-label={open ? "Close menu" : "Open menu"}
+          aria-expanded={open}
+        >
+          {open ? <X size={28} /> : <Menu size={28} />}
+        </button>
 
         {/* DESKTOP MENU */}
         <div className="hidden md:flex items-center gap-10">
@@ -89,9 +75,43 @@ const Navbar = () => {
           <div className="h-6 w-[1px] bg-[#B76E79]/20" />
 
           {/* QUICK ACTIONS */}
-        
+
         </div>
       </nav>
+
+      {/* MOBILE DROPDOWN PANEL - sits in the document flow right under the navbar, no full-screen overlay */}
+      <div
+        className={`md:hidden fixed top-16 left-0 right-0 z-[99] bg-white border-b border-[#B76E79]/10 overflow-hidden transition-all duration-300 ${
+          open ? "max-h-[calc(100vh-4rem)] opacity-100" : "max-h-0 opacity-0"
+        }`}
+      >
+        <div className="flex flex-col divide-y divide-[#B76E79]/10">
+          {navLinks.map((link) => (
+            <Link
+              key={link.name}
+              to={link.path}
+              className={`px-6 py-4 text-sm font-bold uppercase tracking-widest transition-colors ${
+                isActive(link.path) ? "text-[#581845] bg-[#FAF9F6]" : "text-[#1B1B1F]/70 hover:bg-[#FAF9F6] hover:text-[#581845]"
+              }`}
+              onClick={() => setOpen(false)}
+            >
+              {link.name}
+            </Link>
+          ))}
+          <div className="px-6 py-4 flex items-center gap-2 text-[#B76E79]">
+            <Globe size={16} />
+            <span className="text-xs font-bold uppercase tracking-widest">English</span>
+          </div>
+        </div>
+      </div>
+
+      {/* Backdrop to close menu when tapping outside it - light, not a dark takeover */}
+      {open && (
+        <div
+          className="md:hidden fixed inset-0 top-16 z-[98] bg-[#1B1B1F]/20"
+          onClick={() => setOpen(false)}
+        />
+      )}
 
       {/* Spacing for Fixed Nav */}
       <div className="h-16 md:h-24" />
