@@ -5,8 +5,10 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { GoogleOAuthProvider } from "@react-oauth/google";
 
-import { AuthProvider } from "./context/AuthContext.jsx"; // Import AuthProvider
+import { AuthProvider } from "./context/AuthContext.jsx"; // Google auth (commenters)
+import { AdminAuthProvider } from "./context/AdminAuthContext.jsx"; // Admin auth (separate)
 import ProtectedRoute from "./components/ProtectedRoute"; // adjust path if needed
 
 // Import Routes & Layouts
@@ -22,6 +24,9 @@ import AdminRegister from "./routes/Register.jsx";
 import AdminLayout from "./routes/AdminLayout.jsx";
 import ManagePosts from "./components/ManagePost.jsx";
 import Edit from "./components/Edit.jsx";
+import AdminComments from "./components/AdminComment.jsx";
+import AdminUsers from "./components/AdminUser.jsx";
+import AdminSubscribers from "./components/AdminSubscriber.jsx";
 
 const queryClient = new QueryClient();
 
@@ -47,10 +52,14 @@ const router = createBrowserRouter([
         path: "/admin",
         element: <AdminLayout />,
         children: [
+          { index: true, element: <Dashboard /> },
           { path: "dashboard", element: <Dashboard /> },
           { path: "write", element: <Write /> },
           { path: "manage", element: <ManagePosts /> },
           { path: "edit/:slug", element: <Edit /> },
+          { path: "comments", element: <AdminComments /> },
+          { path: "users", element: <AdminUsers /> },
+          { path: "subscribers", element: <AdminSubscribers /> },
         ],
       },
     ],
@@ -60,12 +69,16 @@ const router = createBrowserRouter([
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-    <AuthProvider> {/* 👈 This must wrap everything */}
-      <QueryClientProvider client={queryClient}>
-        <RouterProvider router={router} />
-        <ToastContainer position="bottom-right" />
-      </QueryClientProvider>
-    </AuthProvider>
+    <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>
+      <AdminAuthProvider>
+        <AuthProvider> {/* 👈 This must wrap everything */}
+          <QueryClientProvider client={queryClient}>
+            <RouterProvider router={router} />
+            <ToastContainer position="bottom-right" />
+          </QueryClientProvider>
+        </AuthProvider>
+      </AdminAuthProvider>
+    </GoogleOAuthProvider>
   </StrictMode>
 );
 

@@ -1,8 +1,8 @@
 import { Navigate, Outlet } from "react-router-dom";
-import { useAuth } from "../context/AuthContext.jsx";
+import { useAdminAuth } from "../context/AdminAuthContext.jsx";
 
 const ProtectedRoute = () => {
-  const { isLoggedIn } = useAuth();
+  const { isLoggedIn } = useAdminAuth();
 
   return isLoggedIn ? <Outlet /> : <Navigate to="/login" replace />;
 };

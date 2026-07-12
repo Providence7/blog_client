@@ -1,6 +1,6 @@
 // src/pages/Admin/Dashboard.jsx
 import { useEffect, useState } from "react";
-import { FileText, Users, MessageSquare, LayoutDashboard, Calendar, ArrowUpRight } from "lucide-react";
+import { FileText, Users, MessageSquare, Mail, LayoutDashboard, Calendar, ArrowUpRight } from "lucide-react";
 
 const Dashboard = () => {
   const [stats, setStats] = useState(null);
@@ -63,7 +63,7 @@ const Dashboard = () => {
       </div>
 
       {/* STATS GRID */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
         <StatCard 
           title="Total Publications" 
           count={stats.totalPosts} 
@@ -84,6 +84,13 @@ const Dashboard = () => {
           icon={<MessageSquare size={24} />} 
           color="bg-[#B76E79]" 
           accent="text-[#B76E79]"
+        />
+        <StatCard 
+          title="Newsletter Subscribers" 
+          count={stats.totalSubscribers} 
+          icon={<Mail size={24} />} 
+          color="bg-[#1B1B1F]" 
+          accent="text-[#1B1B1F]"
         />
       </div>
 
@@ -122,7 +129,7 @@ const StatCard = ({ title, count, icon, color, accent }) => {
       <div className="mt-8 relative z-10">
         <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#B76E79] mb-1">{title}</p>
         <h3 className="text-4xl font-bold text-[#1B1B1F] tracking-tighter">
-          {count.toLocaleString()}
+          {(count ?? 0).toLocaleString()}
         </h3>
       </div>
     </div>

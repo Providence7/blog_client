@@ -1,7 +1,7 @@
 // src/pages/AdminLogin.jsx
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { useAuth } from "../context/AuthContext.jsx";
+import { useAdminAuth } from "../context/AdminAuthContext.jsx";
 import { Lock, Mail, ChevronRight, ShieldCheck } from "lucide-react";
 
 const AdminLogin = () => {
@@ -11,7 +11,7 @@ const AdminLogin = () => {
   const [loading, setLoading] = useState(false);
   
   const navigate = useNavigate();
-  const { login } = useAuth();
+  const { login } = useAdminAuth();
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -22,6 +22,7 @@ const AdminLogin = () => {
       const response = await fetch(`${import.meta.env.VITE_API_URL}/api/admin/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
+        credentials: "include",
         body: JSON.stringify({ email, password }),
       });
 
@@ -29,7 +30,7 @@ const AdminLogin = () => {
 
       if (!response.ok) throw new Error(data.message || "Invalid credentials");
 
-      login(); 
+      await login();
       navigate("/admin");
     } catch (err) {
       setError(err.message);

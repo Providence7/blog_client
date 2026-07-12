@@ -34,8 +34,8 @@ const PostList = () => {
 
   // LOADING STATE
   if (status === "pending") return (
-    <div className="space-y-6 md:space-y-12 mt-10">
-      {[1, 2, 3].map((n) => (
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-x-8 md:gap-y-12 mt-10">
+      {[1, 2, 3, 4].map((n) => (
         <div key={n} className="flex flex-row gap-4 md:gap-8 animate-pulse">
           <div className="w-28 sm:w-40 md:w-1/3 shrink-0 aspect-square md:aspect-video bg-gray-200 rounded-xl md:rounded-[2rem]" />
           <div className="flex-1 min-w-0 space-y-3 md:space-y-4 py-1 md:py-2">
@@ -71,16 +71,16 @@ const PostList = () => {
           next={fetchNextPage}
           hasMore={!!hasNextPage}
           loader={
-            <div className="flex justify-center py-12">
+            <div className="col-span-full flex justify-center py-12">
               <Loader2 className="animate-spin text-[#B76E79]" size={24} />
             </div>
           }
-          className="flex flex-col gap-6 md:gap-16 lg:gap-24 mt-12 pb-20"
+          className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-x-8 md:gap-y-16 mt-12 pb-20"
         >
           {allPosts.map((post) => (
             <div
               key={post._id}
-              className="transition-all duration-500 md:hover:translate-x-2"
+              className="transition-all duration-500 md:hover:-translate-y-1"
             >
               <PostListItem post={post} />
             </div>

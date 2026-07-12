@@ -2,6 +2,7 @@
 import { Link, useNavigate, useParams } from "react-router-dom";
 import Image from "../components/Image";
 import Search from "../components/Search";
+import CommentSection from "../components/CommentSection";
 import axios from "axios";
 import { useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
@@ -167,6 +168,9 @@ const SinglePostPage = () => {
               </a>
             </div>
           </div>
+
+          {/* COMMENT SECTION */}
+          <CommentSection slug={slug} />
 
           {/* Closing CTA — an ending, not a dead end */}
           <div className="mt-12 bg-white rounded-3xl border border-[#B76E79]/10 p-8 text-center">

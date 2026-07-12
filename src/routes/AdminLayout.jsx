@@ -1,30 +1,33 @@
 import { useState } from "react";
 import { NavLink, Outlet, useNavigate } from "react-router-dom";
-import axios from "axios";
 import { toast } from "react-toastify";
 import { FiMenu, FiX, FiFileText, FiLogOut, FiFilePlus } from "react-icons/fi";
-import { LayoutDashboard, Palette, Layers } from "lucide-react";
-import { useAuth } from "../context/AuthContext"; // Adjust the path to AuthContext if necessary
+import { LayoutDashboard, MessageSquare, Users, Mail } from "lucide-react";
+import { useAdminAuth } from "../context/AdminAuthContext.jsx";
+import adminApi from "../lib/adminApi";
 
 const NAV_ITEMS = [
   { to: "/admin", label: "Overview", icon: LayoutDashboard, end: true },
   { to: "/admin/write", label: "Create Post", icon: FiFilePlus },
   { to: "/admin/manage", label: "Manage Posts", icon: FiFileText },
- 
+  { to: "/admin/comments", label: "Comments", icon: MessageSquare },
+  { to: "/admin/users", label: "Commenters", icon: Users },
+  { to: "/admin/subscribers", label: "Subscribers", icon: Mail },
 ];
 
 const AdminLayout = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const navigate = useNavigate();
-  const { logout } = useAuth();
+  const { logout } = useAdminAuth();
 
   const handleLogout = async () => {
     try {
-      await axios.post(`${import.meta.env.VITE_API_URL}/api/admin/logout`, {}, { withCredentials: true });
+      await adminApi.post("/logout");
       logout();
       toast.success("Logged out successfully");
       navigate("/login");
     } catch (error) {
+      logout(); // clear local state even if the server call fails
       toast.error("Logout failed");
     }
   };
