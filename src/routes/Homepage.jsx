@@ -29,11 +29,7 @@ const Homepage = () => {
     <div className="bg-[#FAF9F6] min-h-screen pb-20">
       <div className="max-w-7xl mx-auto px-4">
         {/* MASTHEAD */}
-        <div className="text-center max-w-2xl mx-auto pt-2 md:pt-2 pb-2 md:pb-4">
-          <span className="text-[10px] font-bold uppercase tracking-[0.3em] text-[#B76E79]">
-            The Attirebyte Journal
-          </span>
-        </div>
+        
 
         {/* CATEGORIES & SEARCH */}
         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 border-y border-[#B76E79]/10 py-8">
