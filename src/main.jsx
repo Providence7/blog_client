@@ -1,4 +1,4 @@
-import { StrictMode, useEffect } from "react";
+import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import "./index.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
@@ -30,23 +30,44 @@ import AdminSubscribers from "./components/AdminSubscriber.jsx";
 
 const queryClient = new QueryClient();
 
+// Wraps a subtree with AdminAuthProvider — only used for login/register/admin routes,
+// so the /api/admin/me check never fires on public pages.
+const AdminAuthLayout = () => (
+  <AdminAuthProvider>
+    <Mainlayout />
+  </AdminAuthProvider>
+);
+
+const AdminProtectedLayout = () => (
+  <AdminAuthProvider>
+    <ProtectedRoute />
+  </AdminAuthProvider>
+);
+
 const router = createBrowserRouter([
-  // Public routes using Mainlayout
+  // Public routes using Mainlayout — no admin auth check here
   {
     element: <Mainlayout />,
     children: [
       { path: "/", element: <Homepage /> },
       { path: "/about", element: <About /> },
       { path: "/posts", element: <PostListPage /> },
+      { path: "/:slug", element: <SinglePost /> },
+    ],
+  },
+
+  // Login/register — need AdminAuthProvider (useAdminAuth), still use Mainlayout
+  {
+    element: <AdminAuthLayout />,
+    children: [
       { path: "/login", element: <AdminLogin /> },
       { path: "/register", element: <AdminRegister /> },
-      { path: "/:slug", element: <SinglePost /> },
     ],
   },
 
   // Protected admin routes, not using Mainlayout
   {
-    element: <ProtectedRoute />,
+    element: <AdminProtectedLayout />,
     children: [
       {
         path: "/admin",
@@ -66,18 +87,15 @@ const router = createBrowserRouter([
   },
 ]);
 
-
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>
-      <AdminAuthProvider>
-        <AuthProvider> {/* 👈 This must wrap everything */}
-          <QueryClientProvider client={queryClient}>
-            <RouterProvider router={router} />
-            <ToastContainer position="bottom-right" />
-          </QueryClientProvider>
-        </AuthProvider>
-      </AdminAuthProvider>
+      <AuthProvider>
+        <QueryClientProvider client={queryClient}>
+          <RouterProvider router={router} />
+          <ToastContainer position="bottom-right" />
+        </QueryClientProvider>
+      </AuthProvider>
     </GoogleOAuthProvider>
   </StrictMode>
 );
@@ -95,38 +113,30 @@ if ("serviceWorker" in navigator) {
 }
 
 // Install Prompt Logic
-// Main.jsx
-
 let deferredPrompt;
 const installButton = document.getElementById('install-button');
 
 window.addEventListener('beforeinstallprompt', (event) => {
-  // Prevent the default browser prompt
   event.preventDefault();
   deferredPrompt = event;
 
-  // Show custom install button
   installButton.style.display = 'block';
 
   installButton.addEventListener('click', () => {
-    // Trigger the installation prompt
     deferredPrompt.prompt();
 
-    // Wait for the user to respond to the prompt
     deferredPrompt.userChoice.then((choiceResult) => {
       if (choiceResult.outcome === 'accepted') {
         console.log('User accepted the install prompt');
       } else {
         console.log('User dismissed the install prompt');
       }
-      // Reset the deferred prompt
       deferredPrompt = null;
-      installButton.style.display = 'none'; // Optionally hide the button after prompt is shown
+      installButton.style.display = 'none';
     });
   });
 });
 
-// Check if the app is installed
 if (window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone) {
-  installButton.style.display = 'none';  // Hide the install button if app is already installed
+  installButton.style.display = 'none';
 }
