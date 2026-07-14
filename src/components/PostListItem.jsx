@@ -6,13 +6,13 @@ import { ArrowRight, Calendar, Tag } from "lucide-react";
 
 const PostListItem = ({ post }) => {
   return (
-    <div className="group flex flex-row gap-4 sm:gap-6 md:gap-10 p-3 sm:p-4 md:p-6 rounded-2xl md:rounded-[2.5rem] bg-white hover:bg-[#FAF9F6] border border-[#B76E79]/5 hover:border-[#D6AE7B]/20 transition-all duration-500 shadow-xl shadow-[#581845]/5">
+    <div className="group flex flex-row gap-2 sm:gap-6 md:gap-10 p-2 sm:p-4 md:p-6 rounded-xl sm:rounded-2xl md:rounded-[2.5rem] bg-white hover:bg-[#FAF9F6] border border-[#B76E79]/5 hover:border-[#D6AE7B]/20 transition-all duration-500 shadow-xl shadow-[#581845]/5">
 
       {/* Visual Asset Container */}
       {post.img && (
         <Link
           to={`/${post.slug}`}
-          className="w-28 sm:w-40 md:w-1/3 xl:w-2/5 shrink-0 overflow-hidden rounded-xl md:rounded-[2rem] relative aspect-square md:aspect-[4/3] xl:aspect-square"
+          className="w-24 sm:w-40 md:w-1/3 xl:w-2/5 shrink-0 overflow-hidden rounded-lg sm:rounded-xl md:rounded-[2rem] relative aspect-square md:aspect-[4/3] xl:aspect-square"
         >
           <Image
             src={post.img}
@@ -25,11 +25,11 @@ const PostListItem = ({ post }) => {
       )}
 
       {/* Content Details */}
-      <div className="flex flex-col justify-center gap-1.5 sm:gap-3 md:gap-5 flex-1 min-w-0 py-1 md:py-2">
+      <div className="flex flex-col justify-center gap-1 sm:gap-3 md:gap-5 flex-1 min-w-0 py-0 sm:py-1 md:py-2">
 
         {/* Category & Time Attribution */}
-        <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 md:gap-3 text-[8px] sm:text-[9px] md:text-[10px] font-bold uppercase tracking-[0.1em] sm:tracking-[0.15em] md:tracking-[0.2em]">
-          <span className="bg-[#581845] text-white px-2 md:px-3 py-0.5 md:py-1 rounded-full flex items-center gap-1">
+        <div className="flex flex-wrap items-center gap-1 sm:gap-2 md:gap-3 text-[8px] sm:text-[9px] md:text-[10px] font-bold uppercase tracking-[0.1em] sm:tracking-[0.15em] md:tracking-[0.2em]">
+          <span className="bg-[#581845] text-white px-1.5 sm:px-2 md:px-3 py-0.5 md:py-1 rounded-full flex items-center gap-1">
             <Tag size={10} /> {post.category || "General"}
           </span>
           <span className="text-[#B76E79]/40">•</span>
@@ -52,7 +52,7 @@ const PostListItem = ({ post }) => {
         </p>
 
         {/* Footer Attribution & Action */}
-        <div className="flex items-center justify-between mt-1 md:mt-2 pt-2 sm:pt-3 md:pt-5 border-t border-[#B76E79]/10">
+        <div className="flex items-center justify-between mt-0.5 sm:mt-1 md:mt-2 pt-1 sm:pt-3 md:pt-5 border-t border-[#B76E79]/10">
           <div className="flex items-center gap-2 min-w-0">
             <div className="w-6 h-6 md:w-8 md:h-8 rounded-full bg-[#D6AE7B] flex items-center justify-center text-white text-[9px] md:text-[10px] font-bold shrink-0">
               ST

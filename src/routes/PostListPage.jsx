@@ -19,16 +19,16 @@ const PostListPage = () => {
     : "Latest Stories";
 
   return (
-    <div className="bg-[#FAF9F6] min-h-screen px-4 py-8 md:py-12">
+    <div className="bg-[#FAF9F6] min-h-screen px-3 py-4 md:px-4 md:py-12">
       <div className="max-w-7xl mx-auto">
         {/* Mobile Header & Toggle */}
-        <div className="flex items-center justify-between gap-4 mb-8 md:hidden">
+        <div className="flex items-center justify-between gap-4 mb-4 md:mb-8 md:hidden">
           <h1 className="text-xl font-bold text-[#1B1B1F] truncate" style={{ fontFamily: "Georgia, serif" }}>
             {heading}
           </h1>
           <button
             onClick={() => setOpen((prev) => !prev)}
-            className="shrink-0 flex items-center gap-2 bg-[#581845] text-white px-5 py-2.5 rounded-full text-sm font-bold active:scale-95 transition-all"
+            className="shrink-0 flex items-center gap-2 bg-[#581845] text-white px-4 py-2 rounded-full text-sm font-bold active:scale-95 transition-all"
           >
             {open ? (
               <>
@@ -55,10 +55,10 @@ const PostListPage = () => {
           <div className="w-20 h-1 bg-[#D6AE7B] rounded-full mt-3" />
         </div>
 
-        <div className="flex flex-col md:flex-row gap-12 lg:gap-16">
+        <div className="flex flex-col md:flex-row gap-4 md:gap-12 lg:gap-16">
           {/* Main Post Feed */}
           <div className="flex-1 min-w-0">
-            <div className="bg-white/40 rounded-[2.5rem] p-2 md:p-0">
+            <div className="bg-white/40 rounded-2xl md:rounded-[2.5rem] p-0 md:p-0">
               <PostList />
             </div>
           </div>
@@ -75,7 +75,7 @@ const PostListPage = () => {
                 Refine Search
               </h3>
 
-              <div className="bg-white border border-[#B76E79]/10 p-8 rounded-[2rem]">
+              <div className="bg-white border border-[#B76E79]/10 p-4 md:p-8 rounded-xl md:rounded-[2rem]">
                 <SideMenu />
               </div>
 
