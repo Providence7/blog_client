@@ -90,7 +90,7 @@ const PostList = () => {
 
       {/* SYBER DECORATIVE LINE */}
       {!hasNextPage && allPosts.length > 0 && (
-        <div className="flex flex-col items-center gap-4 py-20">
+        <div className="flex flex-col items-center gap-4 py-6">
           <div className="w-px h-20 bg-gradient-to-b from-[#B76E79]/20 to-transparent" />
           <p className="text-[10px] font-bold text-[#B76E79] uppercase tracking-[0.5em]">End of Collection</p>
         </div>
