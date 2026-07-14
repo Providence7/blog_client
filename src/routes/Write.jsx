@@ -1,3 +1,4 @@
+
 // src/pages/Write.jsx
 import "react-quill-new/dist/quill.snow.css";
 import ReactQuill from "react-quill-new";
@@ -13,6 +14,7 @@ import {
   IoCheckmarkCircle,
   IoTimeOutline,
   IoChevronBack,
+  IoLinkOutline,
 } from "react-icons/io5";
 import Upload from "../components/Upload";
 
@@ -42,6 +44,12 @@ const Write = () => {
   const [video, setVideo] = useState("");
   const [progress, setProgress] = useState(0);
   const [isUploading, setIsUploading] = useState(false);
+
+  // Link insert popover state
+  const [showLinkForm, setShowLinkForm] = useState(false);
+  const [linkText, setLinkText] = useState("");
+  const [linkUrl, setLinkUrl] = useState("");
+  const savedRangeRef = useRef(null);
 
   const quillRef = useRef();
   const titleRef = useRef();
@@ -110,6 +118,46 @@ const Write = () => {
       content: value,
       img: cover?.filePath || "",
     });
+  };
+
+  // Open the link popover, remembering where the cursor was / what was selected
+  const openLinkForm = () => {
+    const quill = quillRef.current?.getEditor();
+    const range = quill?.getSelection(true);
+    savedRangeRef.current = range;
+    setLinkText(range && range.length > 0 ? quill.getText(range.index, range.length) : "");
+    setLinkUrl("");
+    setShowLinkForm(true);
+  };
+
+  const closeLinkForm = () => {
+    setShowLinkForm(false);
+    setLinkText("");
+    setLinkUrl("");
+  };
+
+  // Insert (or wrap selected text with) a link at the saved cursor position
+  const handleInsertLink = (e) => {
+    e.preventDefault();
+    if (!linkUrl.trim()) return toast.error("Add a URL for the link.");
+
+    const quill = quillRef.current?.getEditor();
+    const range = savedRangeRef.current || quill.getSelection(true) || { index: quill.getLength(), length: 0 };
+    const normalizedUrl = /^https?:\/\//i.test(linkUrl.trim()) ? linkUrl.trim() : `https://${linkUrl.trim()}`;
+
+    if (range.length > 0) {
+      // Wrap the existing selection with the link
+      quill.formatText(range.index, range.length, "link", normalizedUrl);
+      quill.setSelection(range.index + range.length);
+    } else {
+      // No selection — insert the text as a new link at the cursor
+      const displayText = linkText.trim() || normalizedUrl;
+      quill.insertText(range.index, displayText, "link", normalizedUrl);
+      quill.setSelection(range.index + displayText.length);
+    }
+
+    toast.success("Link added");
+    closeLinkForm();
   };
 
   return (
@@ -223,7 +271,7 @@ const Write = () => {
 
         {/* MEDIA INSERT ROW — plain, in-flow buttons that always sit above the editor,
             so nothing gets clipped off the side of a phone screen */}
-        <div className="flex flex-wrap items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2 relative">
           <span className="text-[10px] font-bold text-[#B76E79] uppercase tracking-widest mr-1">Insert:</span>
           <Upload type="image" setProgress={setProgress} setData={setImg} setIsUploading={setIsUploading}>
             <span className="flex items-center gap-1.5 bg-white border border-[#B76E79]/15 text-[#1B1B1F] text-xs font-bold px-3 py-2 rounded-full cursor-pointer hover:border-[#581845]/40 hover:text-[#581845] transition-all">
@@ -235,10 +283,53 @@ const Write = () => {
               <IoVideocamOutline size={16} /> Video
             </span>
           </Upload>
+
+          {/* LINK — for affiliate links, ad links, or any external URL */}
+          <button
+            type="button"
+            onClick={openLinkForm}
+            className="flex items-center gap-1.5 bg-white border border-[#B76E79]/15 text-[#1B1B1F] text-xs font-bold px-3 py-2 rounded-full cursor-pointer hover:border-[#581845]/40 hover:text-[#581845] transition-all"
+          >
+            <IoLinkOutline size={16} /> Link
+          </button>
+
           {(cover?.url || img?.url) && (
             <span className="flex items-center gap-1 text-[10px] text-[#B76E79] ml-1">
               <IoCheckmarkCircle size={13} /> Tap into the story below to place the next image at your cursor
             </span>
+          )}
+
+          {/* LINK POPOVER FORM */}
+          {showLinkForm && (
+            <div className="absolute top-full left-0 mt-2 z-20 w-full max-w-sm bg-white border border-[#B76E79]/15 rounded-2xl shadow-xl p-4">
+              <div className="flex items-center justify-between mb-3">
+                <span className="text-xs font-bold text-[#581845] uppercase tracking-widest">Insert Link</span>
+                <button type="button" onClick={closeLinkForm} className="text-[#1B1B1F]/40 hover:text-[#581845]">
+                  <IoCloseCircle size={18} />
+                </button>
+              </div>
+              <div className="flex flex-col gap-2">
+                <input
+                  value={linkText}
+                  onChange={(e) => setLinkText(e.target.value)}
+                  placeholder="Link text (e.g. Shop this look)"
+                  className="w-full bg-[#FAF9F6] border border-[#B76E79]/15 rounded-full px-4 py-2 text-sm outline-none focus:border-[#581845]/40"
+                />
+                <input
+                  value={linkUrl}
+                  onChange={(e) => setLinkUrl(e.target.value)}
+                  placeholder="https://your-affiliate-or-ad-link.com"
+                  className="w-full bg-[#FAF9F6] border border-[#B76E79]/15 rounded-full px-4 py-2 text-sm outline-none focus:border-[#581845]/40"
+                />
+                <button
+                  type="button"
+                  onClick={handleInsertLink}
+                  className="mt-1 bg-[#581845] text-white text-xs font-bold px-4 py-2.5 rounded-full hover:bg-[#1B1B1F] transition-all"
+                >
+                  Add Link
+                </button>
+              </div>
+            </div>
           )}
         </div>
 

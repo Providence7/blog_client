@@ -30,16 +30,26 @@ const Homepage = () => {
       <div className="max-w-7xl mx-auto px-3 md:px-4">
         {/* MASTHEAD */}
 
+        {/* SEARCH (mobile) */}
+        <div className="pt-4 md:hidden">
+          <Search />
+        </div>
+
         {/* CATEGORIES & SEARCH */}
-        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 md:gap-6 border-y border-[#B76E79]/10 py-4 md:py-8">
+        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 md:gap-6 border-y border-[#B76E79]/10 py-3 md:py-8 mt-4 md:mt-0">
           <div className="flex-1 overflow-hidden">
-            <div className="flex items-center gap-2 mb-2 md:mb-4 text-[#581845]">
-              <LayoutGrid size={16} />
-              <span className="text-xs font-bold uppercase tracking-widest">Explore Topics</span>
+            <div className="flex items-center gap-1.5 md:gap-2 mb-1.5 md:mb-4 text-[#581845]">
+              <LayoutGrid size={13} className="md:hidden" />
+              <LayoutGrid size={16} className="hidden md:block" />
+              <span className="text-[10px] md:text-xs font-bold uppercase tracking-wide md:tracking-widest">Explore Topics</span>
             </div>
             <MainCategories />
           </div>
 
+          {/* SEARCH (desktop) */}
+          <div className="hidden md:block shrink-0">
+            <Search />
+          </div>
         </div>
 
         {/* FEED HEADER + SORT + WRITE */}
@@ -52,18 +62,20 @@ const Homepage = () => {
           </div>
 
           <div className="flex items-center justify-between md:justify-end gap-2">
-            <div className="flex items-center gap-2 overflow-x-auto">
+            <div className="flex items-center gap-1.5 md:gap-2 overflow-x-auto">
               {SORTS.map(({ key, label, icon: Icon }) => (
                 <button
                   key={key}
                   onClick={() => handleSort(key)}
-                  className={`flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-bold whitespace-nowrap transition-all border ${
+                  className={`flex items-center gap-1 md:gap-1.5 px-2.5 md:px-4 py-1.5 md:py-2 rounded-full text-[10px] md:text-xs font-bold whitespace-nowrap transition-all border ${
                     activeSort === key
                       ? "bg-[#581845] text-white border-[#581845]"
                       : "bg-white text-[#1B1B1F]/60 border-[#B76E79]/15 hover:border-[#581845]/40 hover:text-[#581845]"
                   }`}
                 >
-                  <Icon size={13} /> {label}
+                  <Icon size={11} className="md:hidden" />
+                  <Icon size={13} className="hidden md:block" />
+                  {label}
                 </button>
               ))}
             </div>

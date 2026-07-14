@@ -7,7 +7,7 @@ import axios from "axios";
 import { useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { format } from "timeago.js";
-import { Twitter, Facebook, Instagram, Calendar, Clock, ChevronLeft, LogOut } from "lucide-react";
+import { Twitter, Facebook, Instagram, Calendar, Clock } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 
 const AUTHOR = {
@@ -71,22 +71,8 @@ const SinglePostPage = () => {
 
   return (
     <div className="bg-[#FAF9F6] min-h-screen">
-      {/* BACK NAV */}
-      <div className="max-w-3xl mx-auto px-4 md:px-6 pt-8 flex items-center justify-between">
-        <button
-          onClick={() => navigate(-1)}
-          className="flex items-center gap-1.5 text-[#B76E79] hover:text-[#581845] text-xs font-bold uppercase tracking-widest transition-colors"
-        >
-          <ChevronLeft size={16} />
-          Back to Stories
-        </button>
-
-     
-        
-      </div>
-
       {/* ARTICLE HEADER */}
-      <header className="max-w-3xl mx-auto px-4 md:px-6 pt-8 pb-10 text-center">
+      <header className="max-w-3xl mx-auto px-4 md:px-6 pt-6 md:pt-10 pb-10 text-center">
         <span className="inline-block bg-[#D6AE7B]/15 text-[#581845] text-[10px] uppercase tracking-[0.2em] font-bold px-4 py-1.5 rounded-full mb-6">
           {data.category || "Editorial"}
         </span>
