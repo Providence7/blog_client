@@ -6,7 +6,7 @@ import { ArrowRight, Calendar, Tag } from "lucide-react";
 
 const PostListItem = ({ post }) => {
   return (
-    <div className="group flex flex-row gap-2 sm:gap-6 md:gap-10 p-2 sm:p-4 md:p-6 rounded-xl sm:rounded-2xl md:rounded-[2.5rem] bg-white hover:bg-[#FAF9F6] border border-[#B76E79]/5 hover:border-[#D6AE7B]/20 transition-all duration-500 shadow-xl shadow-[#581845]/5">
+    <div className="group flex flex-row gap-2 sm:gap-6 md:gap-10 p-2 sm:p-4 md:p-6 rounded-xl sm:rounded-2xl md:rounded-[2.5rem] bg-white hover:bg-[#FAF9F6] border border-[#B76E79]/15 hover:border-[#D6AE7B]/40 transition-all duration-500">
 
       {/* Visual Asset Container */}
       {post.img && (
