@@ -73,31 +73,32 @@ const SinglePostPage = () => {
     <div className="bg-[#FAF9F6] min-h-screen">
       {/* ARTICLE HEADER */}
       <header className="max-w-3xl mx-auto px-4 md:px-6 pt-6 md:pt-10 pb-10 text-center">
-        <span className="inline-block bg-[#D6AE7B]/15 text-[#581845] text-[10px] uppercase tracking-[0.2em] font-bold px-4 py-1.5 rounded-full mb-6">
+        <span className="inline-block bg-[#D6AE7B]/15 text-[#581845] text-[9px] sm:text-[10px] uppercase tracking-[0.2em] font-bold px-3.5 sm:px-4 py-1.5 rounded-full mb-5 sm:mb-6">
           {data.category || "Editorial"}
         </span>
 
         <h1
-          className="text-3xl sm:text-4xl md:text-5xl font-bold text-[#1B1B1F] leading-[1.15] mb-6"
+          className="text-2xl max-[374px]:text-xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-[#1B1B1F] leading-[1.2] sm:leading-[1.15] mb-4 sm:mb-6"
           style={{ fontFamily: "Georgia, serif" }}
         >
           {data.title}
         </h1>
 
         {data.desc && (
-          <p className="text-base md:text-lg text-[#1B1B1F]/60 leading-relaxed max-w-xl mx-auto mb-8 italic">
+          <p className="text-sm sm:text-base md:text-lg text-[#1B1B1F]/60 leading-relaxed max-w-xl mx-auto mb-6 sm:mb-8 italic">
             {data.desc}
           </p>
         )}
 
-        <div className="flex items-center justify-center gap-5 text-[#B76E79] text-sm">
-          <div className="flex items-center gap-2">
-            <Image src={AUTHOR.avatar} className="w-7 h-7 rounded-full object-cover" />
+        <div className="flex items-center justify-center gap-3 sm:gap-5 text-[#B76E79] text-xs sm:text-sm">
+          <div className="flex items-center gap-1.5 sm:gap-2">
+            <Image src={AUTHOR.avatar} className="w-6 h-6 sm:w-7 sm:h-7 rounded-full object-cover" />
             <span className="font-semibold text-[#1B1B1F]">{AUTHOR.name}</span>
           </div>
           <span className="w-1 h-1 rounded-full bg-[#B76E79]/40" />
           <div className="flex items-center gap-1.5">
-            <Calendar size={14} />
+            <Calendar size={13} className="sm:hidden" />
+            <Calendar size={14} className="hidden sm:block" />
             <time title={new Date(data.createdAt).toLocaleDateString()}>{format(data.createdAt)}</time>
           </div>
           {readingTime && (
@@ -114,47 +115,50 @@ const SinglePostPage = () => {
 
       {/* COVER IMAGE */}
       {data.img && (
-        <div className="max-w-5xl mx-auto px-4 md:px-6 mb-16">
-          <div className="rounded-[2rem] overflow-hidden shadow-xl border-4 border-white">
+        <div className="max-w-5xl mx-auto px-4 md:px-6 mb-10 sm:mb-16">
+          <div className="rounded-2xl sm:rounded-[2rem] overflow-hidden shadow-xl border-4 border-white">
             <Image
               src={data.img}
-              className="w-full max-h-[520px] object-cover"
+              className="w-full max-h-[280px] sm:max-h-[380px] md:max-h-[520px] object-cover"
             />
           </div>
         </div>
       )}
 
       {/* MAIN CONTENT AREA */}
-      <div className="max-w-6xl mx-auto px-4 md:px-6 pb-24 grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-16">
+      <div className="max-w-6xl mx-auto px-4 md:px-6 pb-16 sm:pb-24 grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-10 sm:gap-16">
         {/* Article Body */}
         <article className="min-w-0">
           <div
-            className="article-body prose prose-lg max-w-none text-[#1B1B1F]
+            className="article-body prose prose-sm sm:prose-base md:prose-lg max-w-none text-[#1B1B1F]
               prose-headings:text-[#581845] prose-headings:font-bold
               prose-a:text-[#581845] prose-a:underline prose-a:underline-offset-4 hover:prose-a:text-[#B76E79]
               prose-strong:text-[#581845]
               prose-blockquote:border-l-[#D6AE7B] prose-blockquote:text-[#1B1B1F]/70 prose-blockquote:not-italic
-              prose-img:rounded-3xl prose-img:shadow-lg
-              leading-[1.9]"
+              prose-img:rounded-2xl sm:prose-img:rounded-3xl prose-img:shadow-lg
+              leading-[1.75] sm:leading-[1.9]"
             style={{ fontFamily: "Georgia, serif" }}
             dangerouslySetInnerHTML={{ __html: data.content }}
           />
 
           {/* Tags / Share footer */}
-          <div className="mt-16 pt-8 border-t border-[#B76E79]/15 flex flex-wrap items-center justify-between gap-6">
-            <span className="bg-white border border-[#B76E79]/15 text-[#581845] text-xs font-bold uppercase tracking-widest px-4 py-2 rounded-full">
+          <div className="mt-10 sm:mt-16 pt-6 sm:pt-8 border-t border-[#B76E79]/15 flex flex-wrap items-center justify-between gap-4 sm:gap-6">
+            <span className="bg-white border border-[#B76E79]/15 text-[#581845] text-[10px] sm:text-xs font-bold uppercase tracking-widest px-3.5 sm:px-4 py-1.5 sm:py-2 rounded-full">
               {data.category || "Editorial"}
             </span>
-            <div className="flex items-center gap-3">
-              <span className="text-[10px] font-bold text-[#B76E79] uppercase tracking-widest mr-1">Share</span>
-              <a href="#" className="p-2.5 rounded-full bg-white border border-[#B76E79]/15 text-[#581845] hover:bg-[#581845] hover:text-white hover:border-[#581845] transition-all">
-                <Twitter size={16} />
+            <div className="flex items-center gap-2.5 sm:gap-3">
+              <span className="text-[9px] sm:text-[10px] font-bold text-[#B76E79] uppercase tracking-widest mr-1">Share</span>
+              <a href="#" className="p-2 sm:p-2.5 rounded-full bg-white border border-[#B76E79]/15 text-[#581845] hover:bg-[#581845] hover:text-white hover:border-[#581845] transition-all">
+                <Twitter size={15} className="sm:hidden" />
+                <Twitter size={16} className="hidden sm:block" />
               </a>
-              <a href="#" className="p-2.5 rounded-full bg-white border border-[#B76E79]/15 text-[#581845] hover:bg-[#581845] hover:text-white hover:border-[#581845] transition-all">
-                <Facebook size={16} />
+              <a href="#" className="p-2 sm:p-2.5 rounded-full bg-white border border-[#B76E79]/15 text-[#581845] hover:bg-[#581845] hover:text-white hover:border-[#581845] transition-all">
+                <Facebook size={15} className="sm:hidden" />
+                <Facebook size={16} className="hidden sm:block" />
               </a>
-              <a href="#" className="p-2.5 rounded-full bg-white border border-[#B76E79]/15 text-[#581845] hover:bg-[#581845] hover:text-white hover:border-[#581845] transition-all">
-                <Instagram size={16} />
+              <a href="#" className="p-2 sm:p-2.5 rounded-full bg-white border border-[#B76E79]/15 text-[#581845] hover:bg-[#581845] hover:text-white hover:border-[#581845] transition-all">
+                <Instagram size={15} className="sm:hidden" />
+                <Instagram size={16} className="hidden sm:block" />
               </a>
             </div>
           </div>
@@ -163,11 +167,11 @@ const SinglePostPage = () => {
           <CommentSection slug={slug} />
 
           {/* Closing CTA — an ending, not a dead end */}
-          <div className="mt-12 bg-white rounded-3xl border border-[#B76E79]/10 p-8 text-center">
-            <p className="text-[#1B1B1F]/70 text-sm mb-4">Enjoyed this story?</p>
+          <div className="mt-10 sm:mt-12 bg-white rounded-2xl sm:rounded-3xl border border-[#B76E79]/10 p-6 sm:p-8 text-center">
+            <p className="text-[#1B1B1F]/70 text-xs sm:text-sm mb-3 sm:mb-4">Enjoyed this story?</p>
             <Link
               to="/"
-              className="inline-block bg-[#581845] text-white text-sm font-bold px-6 py-3 rounded-full hover:bg-[#1B1B1F] transition-all"
+              className="inline-block bg-[#581845] text-white text-xs sm:text-sm font-bold px-5 sm:px-6 py-2.5 sm:py-3 rounded-full hover:bg-[#1B1B1F] transition-all"
             >
               Explore More Stories
             </Link>
@@ -175,28 +179,28 @@ const SinglePostPage = () => {
         </article>
 
         {/* Sidebar */}
-        <aside className="lg:sticky lg:top-24 lg:self-start space-y-8">
+        <aside className="lg:sticky lg:top-24 lg:self-start space-y-6 sm:space-y-8">
           {/* Author Profile Card */}
-          <div className="bg-white p-8 rounded-3xl shadow-sm border border-[#B76E79]/10 relative overflow-hidden">
+          <div className="bg-white p-6 sm:p-8 rounded-2xl sm:rounded-3xl shadow-sm border border-[#B76E79]/10 relative overflow-hidden">
             <div className="absolute top-0 left-0 w-1.5 h-full bg-[#581845]" />
-            <h3 className="text-[#581845] text-xs font-bold uppercase tracking-widest mb-6">About the Author</h3>
-            <div className="flex items-center gap-4 mb-4">
+            <h3 className="text-[#581845] text-[10px] sm:text-xs font-bold uppercase tracking-widest mb-4 sm:mb-6">About the Author</h3>
+            <div className="flex items-center gap-3 sm:gap-4 mb-4">
               <Image
                 src={AUTHOR.avatar}
-                className="w-16 h-16 rounded-2xl object-cover border-2 border-[#D6AE7B]/20"
+                className="w-12 h-12 sm:w-16 sm:h-16 rounded-xl sm:rounded-2xl object-cover border-2 border-[#D6AE7B]/20"
               />
               <div>
-                <h4 className="font-bold text-[#1B1B1F]">{AUTHOR.name}</h4>
-                <p className="text-[10px] text-[#B76E79] font-medium uppercase tracking-wide">{AUTHOR.role}</p>
+                <h4 className="font-bold text-sm sm:text-base text-[#1B1B1F]">{AUTHOR.name}</h4>
+                <p className="text-[9px] sm:text-[10px] text-[#B76E79] font-medium uppercase tracking-wide">{AUTHOR.role}</p>
               </div>
             </div>
-            <p className="text-sm text-[#1B1B1F]/70 leading-relaxed">{AUTHOR.bio}</p>
+            <p className="text-xs sm:text-sm text-[#1B1B1F]/70 leading-relaxed">{AUTHOR.bio}</p>
           </div>
 
           {/* Sidebar Search Section */}
-          <div className="bg-[#581845] p-8 rounded-3xl shadow-xl text-white">
-            <h3 className="text-xs font-bold uppercase tracking-[0.2em] mb-4 text-[#D6AE7B]">Discovery</h3>
-            <p className="text-sm opacity-70 mb-6 font-light leading-relaxed">
+          <div className="bg-[#581845] p-6 sm:p-8 rounded-2xl sm:rounded-3xl shadow-xl text-white">
+            <h3 className="text-[10px] sm:text-xs font-bold uppercase tracking-[0.2em] mb-3 sm:mb-4 text-[#D6AE7B]">Discovery</h3>
+            <p className="text-xs sm:text-sm opacity-70 mb-5 sm:mb-6 font-light leading-relaxed">
               Looking for something specific in the world of fashion?
             </p>
             <Search />
@@ -224,7 +228,12 @@ const SinglePostPage = () => {
         }
         @media (max-width: 640px) {
           .article-body > p:first-of-type::first-letter {
-            font-size: 3.2em;
+            font-size: 3em;
+          }
+        }
+        @media (max-width: 380px) {
+          .article-body > p:first-of-type::first-letter {
+            font-size: 2.4em;
           }
         }
       `}</style>
