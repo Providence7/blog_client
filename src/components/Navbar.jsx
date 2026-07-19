@@ -34,10 +34,10 @@ const Navbar = () => {
         {/* LOGO */}
         <Link to="/" className="group transition-transform active:scale-95 min-w-0 shrink">
           <div className="flex flex-col leading-tight min-w-0">
-            <span className="text-xl max-[374px]:text-lg sm:text-2xl md:text-3xl font-black tracking-tighter text-[#581845] whitespace-nowrap">
+            <span className="text-2xl max-[374px]:text-xl sm:text-3xl md:text-5xl font-black tracking-tighter text-[#581845] whitespace-nowrap">
               ATTIRE<span className="text-[#D6AE7B]">.</span>
             </span>
-            <span className="block text-[8px] sm:text-[10px] md:text-xs font-medium italic text-[#B76E79] truncate">
+            <span className="block text-[10px] sm:text-xs md:text-sm font-medium italic text-[#B76E79] truncate">
               Global Fashion Journal
             </span>
           </div>

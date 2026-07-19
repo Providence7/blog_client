@@ -40,7 +40,7 @@ const PostListItem = ({ post }) => {
         {/* Headline */}
         <Link
           to={`/${post.slug}`}
-          className="text-sm sm:text-lg md:text-xl font-bold text-[#1B1B1F] leading-snug hover:text-[#581845] transition-colors line-clamp-2"
+          className="text-base sm:text-xl md:text-2xl font-bold text-[#1B1B1F] leading-snug hover:text-[#581845] transition-colors line-clamp-2"
           style={{ fontFamily: "Georgia, serif" }}
         >
           {post.title}
