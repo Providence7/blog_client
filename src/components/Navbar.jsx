@@ -17,7 +17,6 @@ const Navbar = () => {
 
   const isActive = (path) => location.pathname === path;
 
-  // Lock body scroll while the mobile menu is open
   useEffect(() => {
     document.body.style.overflow = open ? "hidden" : "";
     return () => {
@@ -25,7 +24,6 @@ const Navbar = () => {
     };
   }, [open]);
 
-  // Close the menu on route change
   useEffect(() => {
     setOpen(false);
   }, [location.pathname, location.search]);
@@ -36,10 +34,10 @@ const Navbar = () => {
         {/* LOGO */}
         <Link to="/" className="group transition-transform active:scale-95 min-w-0 shrink">
           <div className="flex flex-col leading-tight min-w-0">
-            <span className="text-lg max-[374px]:text-base sm:text-xl md:text-2xl font-black tracking-tighter text-[#581845] whitespace-nowrap">
+            <span className="text-xl max-[374px]:text-lg sm:text-2xl md:text-3xl font-black tracking-tighter text-[#581845] whitespace-nowrap">
               ATTIRE<span className="text-[#D6AE7B]">.</span>
             </span>
-            <span className="block text-[6px] sm:text-[8px] md:text-[10px] font-medium italic text-[#B76E79] truncate">
+            <span className="block text-[8px] sm:text-[10px] md:text-xs font-medium italic text-[#B76E79] truncate">
               Global Fashion Journal
             </span>
           </div>
@@ -98,7 +96,6 @@ const Navbar = () => {
 
           <div className="h-6 w-[1px] bg-[#B76E79]/20" />
 
-          {/* QUICK ACTIONS */}
           {currentUser && (
             <div className="flex items-center gap-3">
               <img
@@ -121,7 +118,6 @@ const Navbar = () => {
         </div>
       </nav>
 
-      {/* MOBILE DROPDOWN PANEL - sits in the document flow right under the navbar, no full-screen overlay */}
       <div
         className={`md:hidden fixed top-14 sm:top-16 left-0 right-0 z-[99] bg-white border-b border-[#B76E79]/10 overflow-hidden transition-all duration-300 ${
           open ? "max-h-[calc(100vh-3.5rem)] sm:max-h-[calc(100vh-4rem)] opacity-100" : "max-h-0 opacity-0"
@@ -148,7 +144,6 @@ const Navbar = () => {
         </div>
       </div>
 
-      {/* Backdrop to close menu when tapping outside it - light, not a dark takeover */}
       {open && (
         <div
           className="md:hidden fixed inset-0 top-14 sm:top-16 z-[98] bg-[#1B1B1F]/20"
@@ -156,7 +151,6 @@ const Navbar = () => {
         />
       )}
 
-      {/* Spacing for Fixed Nav */}
       <div className="h-14 sm:h-16 md:h-24" />
     </>
   );
