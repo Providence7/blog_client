@@ -38,11 +38,7 @@ const Homepage = () => {
         {/* CATEGORIES & SEARCH */}
         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 md:gap-6 border-y border-[#B76E79]/10 py-3 md:py-8 mt-4 md:mt-0">
           <div className="flex-1 overflow-hidden">
-            <div className="flex items-center gap-1.5 md:gap-2 mb-1.5 md:mb-4 text-[#581845]">
-              <LayoutGrid size={13} className="md:hidden" />
-              <LayoutGrid size={16} className="hidden md:block" />
-              <span className="text-[10px] md:text-xs font-bold uppercase tracking-wide md:tracking-widest">Explore Topics</span>
-            </div>
+
             <MainCategories />
           </div>
 
