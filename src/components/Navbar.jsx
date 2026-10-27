@@ -1,7 +1,7 @@
 // src/components/Navbar.jsx
 import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Menu, X, Globe, LogOut } from "lucide-react";
+import { Menu, X, Globe, LogOut, Home, Flame, Info } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 
 const Navbar = () => {
@@ -10,19 +10,16 @@ const Navbar = () => {
   const { currentUser, logout } = useAuth();
 
   const navLinks = [
-    { name: "Home", path: "/" },
-    { name: "Most Popular", path: "/posts?sort=popular" },
-    { name: "About", path: "/about" },
+    { name: "Home", path: "/", icon: Home },
+    { name: "Popular", label: "Most Popular", path: "/posts?sort=popular", icon: Flame },
+    { name: "About", path: "/about", icon: Info },
   ];
 
-  const isActive = (path) => location.pathname === path;
-
-  useEffect(() => {
-    document.body.style.overflow = open ? "hidden" : "";
-    return () => {
-      document.body.style.overflow = "";
-    };
-  }, [open]);
+  const isActive = (path) => {
+    const [pathname, search] = path.split("?");
+    if (search) return location.pathname === pathname && location.search === `?${search}`;
+    return location.pathname === pathname && !location.search.includes("sort=popular");
+  };
 
   useEffect(() => {
     setOpen(false);
@@ -43,35 +40,24 @@ const Navbar = () => {
           </div>
         </Link>
 
-        {/* MOBILE: AVATAR/LOGOUT + MENU TOGGLE */}
-        <div className="md:hidden flex items-center gap-1.5 xs:gap-2 shrink-0">
+        {/* MOBILE: AVATAR + MENU TOGGLE */}
+        <div className="md:hidden flex items-center gap-2 shrink-0">
           {currentUser && (
-            <div className="flex items-center gap-1 xs:gap-1.5 shrink-0">
-              <img
-                src={currentUser.avatar}
-                alt={currentUser.username || "You"}
-                className="w-6 h-6 sm:w-8 sm:h-8 rounded-full object-cover border border-[#D6AE7B]/30 shrink-0"
-              />
-              <button
-                onClick={logout}
-                className="p-1 sm:p-1.5 text-[#B76E79] hover:text-red-500 transition-colors shrink-0"
-                aria-label="Logout"
-                title="Logout"
-              >
-                <LogOut size={16} className="sm:hidden" />
-                <LogOut size={18} className="hidden sm:block" />
-              </button>
-            </div>
+            <img
+              src={currentUser.avatar}
+              alt={currentUser.username || "You"}
+              className="w-7 h-7 sm:w-8 sm:h-8 rounded-full object-cover border border-[#D6AE7B]/40 shrink-0"
+            />
           )}
 
           <button
-            className="p-1.5 sm:p-2 text-[#581845] hover:bg-[#FAF9F6] rounded-xl transition-colors shrink-0"
+            className="p-2 text-[#581845] bg-[#FAF9F6] active:bg-[#D6AE7B]/20 rounded-xl transition-colors shrink-0"
             onClick={() => setOpen(!open)}
             aria-label={open ? "Close menu" : "Open menu"}
             aria-expanded={open}
+            aria-controls="mobile-nav"
           >
-            {open ? <X size={24} className="sm:hidden" /> : <Menu size={24} className="sm:hidden" />}
-            {open ? <X size={28} className="hidden sm:block" /> : <Menu size={28} className="hidden sm:block" />}
+            {open ? <X size={20} /> : <Menu size={20} />}
           </button>
         </div>
 
@@ -86,7 +72,7 @@ const Navbar = () => {
                   isActive(link.path) ? "text-[#581845]" : "text-[#1B1B1F]/60 hover:text-[#581845]"
                 }`}
               >
-                {link.name}
+                {link.label || link.name}
                 {isActive(link.path) && (
                   <span className="absolute bottom-0 left-0 w-full h-[2px] bg-[#D6AE7B] rounded-full animate-in fade-in slide-in-from-left-2" />
                 )}
@@ -118,35 +104,68 @@ const Navbar = () => {
         </div>
       </nav>
 
+      {/* MOBILE PANEL (attached to navbar, compact) */}
       <div
-        className={`md:hidden fixed top-14 sm:top-16 left-0 right-0 z-[99] bg-white border-b border-[#B76E79]/10 overflow-hidden transition-all duration-300 ${
-          open ? "max-h-[calc(100vh-3.5rem)] sm:max-h-[calc(100vh-4rem)] opacity-100" : "max-h-0 opacity-0"
+        id="mobile-nav"
+        aria-hidden={!open}
+        className={`md:hidden fixed top-14 sm:top-16 left-0 right-0 z-[99] grid transition-[grid-template-rows] duration-300 ease-out ${
+          open ? "grid-rows-[1fr]" : "grid-rows-[0fr]"
         }`}
       >
-        <div className="flex flex-col divide-y divide-[#B76E79]/10">
-          {navLinks.map((link) => (
-            <Link
-              key={link.name}
-              to={link.path}
-              className={`px-4 sm:px-6 py-3.5 sm:py-4 text-sm font-bold uppercase tracking-widest transition-colors ${
-                isActive(link.path) ? "text-[#581845] bg-[#FAF9F6]" : "text-[#1B1B1F]/70 hover:bg-[#FAF9F6] hover:text-[#581845]"
-              }`}
-              onClick={() => setOpen(false)}
-            >
-              {link.name}
-            </Link>
-          ))}
+        <div className="overflow-hidden">
+          <div className="bg-white rounded-b-3xl border-b border-[#B76E79]/10 shadow-xl shadow-[#581845]/10 p-3 space-y-3">
+            {/* Link tiles */}
+            <div className="grid grid-cols-3 gap-2">
+              {navLinks.map(({ name, path, icon: Icon }) => {
+                const active = isActive(path);
+                return (
+                  <Link
+                    key={name}
+                    to={path}
+                    tabIndex={open ? 0 : -1}
+                    onClick={() => setOpen(false)}
+                    className={`flex flex-col items-center justify-center gap-1.5 py-3 rounded-2xl text-[10px] font-bold uppercase tracking-widest transition-all active:scale-95 ${
+                      active
+                        ? "bg-[#581845] text-white shadow-md shadow-[#581845]/20"
+                        : "bg-[#FAF9F6] text-[#581845]/80 active:bg-[#D6AE7B]/20"
+                    }`}
+                  >
+                    <Icon size={18} className={active ? "text-[#D6AE7B]" : "text-[#B76E79]"} />
+                    {name}
+                  </Link>
+                );
+              })}
+            </div>
 
-          <div className="px-4 sm:px-6 py-3.5 sm:py-4 flex items-center gap-2 text-[#B76E79]">
-            <Globe size={16} />
-            <span className="text-xs font-bold uppercase tracking-widest">English</span>
+            {/* Footer row */}
+            <div className="flex items-center justify-between gap-2 px-1 pt-0.5">
+              <div className="flex items-center gap-1.5 text-[#B76E79]">
+                <Globe size={14} />
+                <span className="text-[10px] font-bold uppercase tracking-widest">English</span>
+              </div>
+
+              {currentUser && (
+                <button
+                  onClick={() => {
+                    setOpen(false);
+                    logout();
+                  }}
+                  tabIndex={open ? 0 : -1}
+                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#FAF9F6] text-[#B76E79] active:text-red-500 text-[10px] font-bold uppercase tracking-widest transition-colors"
+                >
+                  <LogOut size={13} />
+                  Logout
+                </button>
+              )}
+            </div>
           </div>
         </div>
       </div>
 
+      {/* Tap-outside to close */}
       {open && (
         <div
-          className="md:hidden fixed inset-0 top-14 sm:top-16 z-[98] bg-[#1B1B1F]/20"
+          className="md:hidden fixed inset-0 top-14 sm:top-16 z-[98] bg-[#1B1B1F]/20 backdrop-blur-[2px]"
           onClick={() => setOpen(false)}
         />
       )}
